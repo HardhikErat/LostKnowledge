@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy — Lost Knowledge</title>
+  <link rel="stylesheet" href="/lost-knowledge/assets/css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container nav-inner">
+    <a href="/lost-knowledge/index.html" class="site-logo">
+      <img src="/lost-knowledge/assets/logo.png" alt="Lost Knowledge" class="nav-logo-img">
+      <div class="logo-text">
+        <span class="logo-mark">Lost Knowledge</span>
+        <span class="logo-sub">Archive of Vanishing Wisdom</span>
+      </div>
+    </a>
+    <button class="nav-toggle" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    <nav class="nav-links">
+      <a href="/lost-knowledge/index.html"    class="nav-link">Archive</a>
+      <a href="/lost-knowledge/about.php"    class="nav-link">About</a>
+      <div class="nav-sep"></div>
+      <a href="/lost-knowledge/register.html" class="nav-link">Register</a>
+      <a href="/lost-knowledge/login.html"    class="nav-link">Sign In</a>
+      <a href="/lost-knowledge/submit.php"    class="nav-link nav-cta">✦ Submit Entry</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page-header">
+  <div class="container">
+    <div class="section-label">Support</div>
+    <h1>Privacy Policy</h1>
+    <p>Last updated: January 2026</p>
+  </div>
+</div>
+
+<main>
+  <div class="container" style="padding:var(--space-8) var(--space-3);max-width:760px">
+
+    <div style="background:var(--bg-panel);border:1px solid var(--border-gold);border-radius:var(--radius-xl);padding:var(--space-4);margin-bottom:var(--space-6)">
+      <p style="color:var(--text-on-dark-muted);font-size:.9rem;line-height:1.8;margin:0">
+        Lost Knowledge Archive is a student project built for educational purposes. We take your privacy seriously. This policy explains what data we collect, why, and how it is protected.
+      </p>
+    </div>
+
+    <!-- Section style reused -->
+    <style>
+      .policy-section { margin-bottom: var(--space-6); }
+      .policy-section h2 { color: var(--text-on-dark); font-size: 1.25rem; margin-bottom: var(--space-3); padding-bottom: 10px; border-bottom: 1px solid var(--border-dark); display: flex; align-items: center; gap: 10px; }
+      .policy-section h2::before { content: '✦'; color: var(--gold); font-size: 10px; }
+      .policy-section p, .policy-section li { color: var(--text-on-dark-muted); font-size: .9rem; line-height: 1.85; }
+      .policy-section ul { padding-left: 1.25rem; margin-top: .5rem; }
+      .policy-section ul li { margin-bottom: 8px; }
+      .policy-section strong { color: var(--text-on-dark); font-weight: 600; }
+    </style>
+
+    <div class="policy-section">
+      <h2>Information we collect</h2>
+      <p>When you create an account, we collect:</p>
+      <ul>
+        <li><strong>Username</strong> — displayed publicly on your entries and comments.</li>
+        <li><strong>Email address</strong> — used only for account identification. Never displayed publicly.</li>
+        <li><strong>Password</strong> — stored as a one-way bcrypt hash. We cannot read your password.</li>
+      </ul>
+      <p>When you use the archive, we also store:</p>
+      <ul>
+        <li>The entries, comments, and votes you submit.</li>
+        <li>A session cookie to keep you signed in.</li>
+        <li>An optional "remember me" cookie (30 days) if you choose it at login.</li>
+      </ul>
+    </div>
+
+    <div class="policy-section">
+      <h2>How we use your information</h2>
+      <ul>
+        <li>To authenticate your account and maintain your session.</li>
+        <li>To display your username publicly alongside your contributions.</li>
+        <li>To allow you to manage, edit, and delete your entries.</li>
+        <li>To prevent duplicate votes per user per entry.</li>
+      </ul>
+      <p>We do <strong>not</strong> sell, share, or transfer your data to any third party. We do not use your data for advertising or marketing.</p>
+    </div>
+
+    <div class="policy-section">
+      <h2>Data storage &amp; security</h2>
+      <ul>
+        <li>All data is stored in a MySQL database on the local XAMPP server.</li>
+        <li>Passwords are hashed using <strong>bcrypt</strong> with a cost factor of 12.</li>
+        <li>All database queries use <strong>PDO prepared statements</strong> to prevent SQL injection.</li>
+        <li>Session IDs are regenerated on login to prevent session fixation.</li>
+        <li>HTTP-only, SameSite cookies are used to mitigate XSS and CSRF attacks.</li>
+      </ul>
+    </div>
+
+    <div class="policy-section">
+      <h2>Your rights</h2>
+      <ul>
+        <li><strong>Access</strong> — you can view all your submitted entries and comments in your dashboard.</li>
+        <li><strong>Deletion</strong> — you can delete your entries from your dashboard at any time. Deleting an entry also removes all associated votes and comments.</li>
+        <li><strong>Account removal</strong> — to delete your account entirely, contact the administrator.</li>
+      </ul>
+    </div>
+
+    <div class="policy-section">
+      <h2>Cookies</h2>
+      <p>We use two types of cookies:</p>
+      <ul>
+        <li><strong>Session cookie</strong> — expires when you close your browser. Required to stay signed in.</li>
+        <li><strong>Remember me cookie</strong> (<code style="background:var(--bg-void);padding:2px 5px;border-radius:4px;font-family:var(--font-mono);font-size:.85em">lk_remember</code>) — optional, lasts 30 days. Set only if you tick "Remember me" at login.</li>
+      </ul>
+      <p>We do not use analytics cookies, tracking cookies, or third-party cookies of any kind.</p>
+    </div>
+
+    <div class="policy-section">
+      <h2>Contact</h2>
+      <p>For any privacy-related questions or data removal requests, contact the archive administrator at <strong>admin@lostknowledge.local</strong>.</p>
+    </div>
+
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-ornament"><span style="color:var(--gold);font-size:12px">✦</span></div>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <img src="/lost-knowledge/assets/logo.png" alt="Lost Knowledge" style="width:40px;height:40px;border-radius:4px;object-fit:cover">
+          <div class="footer-logo-name">Lost Knowledge</div>
+        </div>
+        <p class="footer-tagline">Preserving forgotten traditions, dying crafts, and ancient wisdom for future generations.</p>
+        <div class="footer-est"><span>✦</span> Est. 2026 <span>✦</span></div>
+      </div>
+      <div class="footer-col"><h4>Archive</h4><ul><li><a href="/lost-knowledge/index.html">Browse Entries</a></li><li><a href="/lost-knowledge/submit.php">Submit Entry</a></li></ul></div>
+      <div class="footer-col"><h4>Community</h4><ul><li><a href="/lost-knowledge/about.php">About Us</a></li><li><a href="/lost-knowledge/register.html">Become a Keeper</a></li></ul></div>
+      <div class="footer-col">
+        <h4>Support</h4>
+        <ul>
+          <li><a href="/lost-knowledge/help.html">Help Center</a></li>
+          <li><a href="/lost-knowledge/privacy.html">Privacy Policy</a></li>
+          <li><a href="/lost-knowledge/terms.html">Terms of Service</a></li>
+          <li><a href="/lost-knowledge/admin/admin_dashboard.php" class="admin-link">Admin Dashboard</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Lost Knowledge</span>
+      <span class="footer-bottom-diamond">✦</span>
+      <span>Preserving wisdom for tomorrow</span>
+    </div>
+  </div>
+</footer>
+
+<script src="/lost-knowledge/assets/js/script.js"></script>
+</body>
+</html>

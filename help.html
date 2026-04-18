@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Help Center — Lost Knowledge</title>
+  <link rel="stylesheet" href="/lost-knowledge/assets/css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container nav-inner">
+    <a href="/lost-knowledge/index.html" class="site-logo">
+      <img src="/lost-knowledge/assets/logo.png" alt="Lost Knowledge" class="nav-logo-img">
+      <div class="logo-text">
+        <span class="logo-mark">Lost Knowledge</span>
+        <span class="logo-sub">Archive of Vanishing Wisdom</span>
+      </div>
+    </a>
+    <button class="nav-toggle" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    <nav class="nav-links">
+      <a href="/lost-knowledge/index.html"    class="nav-link">Archive</a>
+      <a href="/lost-knowledge/about.php"    class="nav-link">About</a>
+      <div class="nav-sep"></div>
+      <a href="/lost-knowledge/register.html" class="nav-link">Register</a>
+      <a href="/lost-knowledge/login.html"    class="nav-link">Sign In</a>
+      <a href="/lost-knowledge/submit.php"    class="nav-link nav-cta">✦ Submit Entry</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page-header">
+  <div class="container">
+    <div class="section-label">Support</div>
+    <h1>Help Center</h1>
+    <p>Everything you need to know about using the Lost Knowledge Archive.</p>
+  </div>
+</div>
+
+<main>
+  <div class="container" style="padding:var(--space-8) var(--space-3);max-width:860px">
+
+    <!-- Quick links -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:var(--space-2);margin-bottom:var(--space-8)">
+      <a href="#getting-started" style="text-decoration:none">
+        <div style="background:var(--bg-panel);border:1px solid var(--border-gold);border-radius:var(--radius-xl);padding:var(--space-3);text-align:center;transition:all var(--transition)">
+          <div style="font-size:1.8rem;margin-bottom:8px">📖</div>
+          <div style="font-family:var(--font-display);font-size:.95rem;font-weight:600;color:var(--text-on-dark)">Getting Started</div>
+          <div style="font-size:12px;color:var(--text-on-dark-faint);margin-top:4px">New to the archive?</div>
+        </div>
+      </a>
+      <a href="#submitting" style="text-decoration:none">
+        <div style="background:var(--bg-panel);border:1px solid var(--border-gold);border-radius:var(--radius-xl);padding:var(--space-3);text-align:center;transition:all var(--transition)">
+          <div style="font-size:1.8rem;margin-bottom:8px">✍️</div>
+          <div style="font-family:var(--font-display);font-size:.95rem;font-weight:600;color:var(--text-on-dark)">Submitting Entries</div>
+          <div style="font-size:12px;color:var(--text-on-dark-faint);margin-top:4px">Share your knowledge</div>
+        </div>
+      </a>
+      <a href="#voting" style="text-decoration:none">
+        <div style="background:var(--bg-panel);border:1px solid var(--border-gold);border-radius:var(--radius-xl);padding:var(--space-3);text-align:center;transition:all var(--transition)">
+          <div style="font-size:1.8rem;margin-bottom:8px">⚖️</div>
+          <div style="font-family:var(--font-display);font-size:.95rem;font-weight:600;color:var(--text-on-dark)">Voting & Comments</div>
+          <div style="font-size:12px;color:var(--text-on-dark-faint);margin-top:4px">Engage with entries</div>
+        </div>
+      </a>
+      <a href="#account" style="text-decoration:none">
+        <div style="background:var(--bg-panel);border:1px solid var(--border-gold);border-radius:var(--radius-xl);padding:var(--space-3);text-align:center;transition:all var(--transition)">
+          <div style="font-size:1.8rem;margin-bottom:8px">👤</div>
+          <div style="font-family:var(--font-display);font-size:.95rem;font-weight:600;color:var(--text-on-dark)">Your Account</div>
+          <div style="font-size:12px;color:var(--text-on-dark-faint);margin-top:4px">Profile & settings</div>
+        </div>
+      </a>
+    </div>
+
+    <!-- Divider -->
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:var(--space-6)">
+      <div style="flex:1;height:1px;background:var(--border-dark)"></div>
+      <span style="color:var(--gold);font-size:10px">✦</span>
+      <div style="flex:1;height:1px;background:var(--border-dark)"></div>
+    </div>
+
+    <!-- Getting Started -->
+    <section id="getting-started" style="margin-bottom:var(--space-8)">
+      <h2 style="color:var(--text-on-dark);font-size:1.4rem;margin-bottom:var(--space-4);padding-bottom:12px;border-bottom:1px solid var(--border-dark)">
+        Getting Started
+      </h2>
+
+      <details style="background:var(--bg-panel);border:1px solid var(--border-dark);border-radius:var(--radius-lg);padding:var(--space-3);margin-bottom:10px">
+        <summary style="font-weight:600;font-size:.95rem;color:var(--text-on-dark);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center">
+          What is Lost Knowledge?
+          <span style="color:var(--amber);font-size:12px">▾</span>
+        </summary>
+        <p style="margin-top:var(--space-2);color:var(--text-on-dark-muted);font-size:.9rem;line-height:1.75">
+          Lost Knowledge is a community archive dedicated to preserving dying traditions, forgotten crafts, endangered languages, and ancient wisdom before they vanish from human memory. Anyone can register as a Keeper and contribute entries to the archive.
+        </p>
+      </details>
+
+      <details style="background:var(--bg-panel);border:1px solid var(--border-dark);border-radius:var(--radius-lg);padding:var(--space-3);margin-bottom:10px">
+        <summary style="font-weight:600;font-size:.95rem;color:var(--text-on-dark);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center">
+          How do I create an account?
+          <span style="color:var(--amber);font-size:12px">▾</span>
+        </summary>
+        <p style="margin-top:var(--space-2);color:var(--text-on-dark-muted);font-size:.9rem;line-height:1.75">
+          Click <a href="/lost-knowledge/register.html">Register</a> in the top navigation. Enter a username, email address, and a password (minimum 8 characters, one uppercase letter, one number). Your account is created instantly and you are automatically signed in.
+        </p>
+      </details>
+
+      <details style="background:var(--bg-panel);border:1px solid var(--border-dark);border-radius:var(--radius-lg);padding:var(--space-3);margin-bottom:10px">
+        <summary style="font-weight:600;font-size:.95rem;color:var(--text-on-dark);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center">
+          What is a Keeper?
+          <span style="color:var(--amber);font-size:12px">▾</span>
+        </summary>
+        <p style="margin-top:var(--space-2);color:var(--text-on-dark-muted);font-size:.9rem;line-height:1.75">
+          A Keeper is any registered user who contributes to the archive. The name reflects the mission — you are keeping knowledge alive. There is no application process. Simply register and start contributing.
+        </p>
+      </details>
+
+      <details style="background:var(--bg-panel);border:1px solid var(--border-dark);border-radius:var(--radius-lg);padding:var(--space-3);margin-bottom:10px">
+        <summary style="font-weight:600;font-size:.95rem;color:var(--text-on-dark);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center">
+          I forgot my password. What do I do?
+          <span style="color:var(--amber);font-size:12px">▾</span>
+        </summary>
+        <p style="margin-top:var(--space-2);color:var(--text-on-dark-muted);font-size:.9rem;line-height:1.75">
+          At the moment, password resets must be handled by the site administrator. Please contact the admin at <strong style="color:var(--amber-light)">admin@lostknowledge.local</strong> with your registered email address and a reset will be issued.
+        </p>
+      </details>
+    </section>
+
+    <!-- Submitting -->
+    <section id="submitting" style="margin-bottom:var(--space-8)">
+      <h2 style="color:var(--text-on-dark);font-size:1.4rem;margin-bottom:var(--space-4);padding-bottom:12px;border-bottom:1px solid var(--border-dark)">
+        Submitting Entries
+      </h2>
+
+      <details style="background:var(--bg-panel);border:1px solid var(--border-dark);border-radius:var(--radius-lg);padding:var(--space-3);margin-bottom:10px" open>
+        <summary style="font-weight:600;font-size:.95rem;color:var(--text-on-dark);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center">
+          What can I submit?
+          <span style="color:var(--amber);font-size:12px">▾</span>
+        </summary>
+        <p style="margin-top:var(--space-2);color:var(--text-on-dark-muted);font-size:.9rem;line-height:1.75">
+          Any knowledge that is at risk of being lost. This includes dying crafts and artisanal techniques, oral traditions and folklore, herbal and traditional medicine, endangered agricultural practices, vanishing languages and scripts, traditional navigation methods, sacred rituals and ceremonies, and architectural techniques no longer in practice.
+        </p>
+      </details>
+
+      <details style="background:var(--bg-panel);border:1px solid var(--border-dark);border-radius:var(--radius-lg);padding:var(--space-3);margin-bottom:10px">
+        <summary style="font-weight:600;font-size:.95rem;color:var(--text-on-dark);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center">
+          How does the review process work?
+          <span style="color:var(--amber);font-size:12px">▾</span>
+        </summary>
+        <p style="margin-top:var(--space-2);color:var(--text-on-dark-muted);font-size:.9rem;line-height:1.75">
+          Every submission goes through admin review before appearing in the public archive. After submitting, your entry will show as <strong style="color:var(--amber-light)">Pending</strong> in your dashboard. Once approved it becomes <strong style="color:#6BC48A">Approved</strong> and is visible to everyone. Entries that do not meet quality standards are marked <strong style="color:#C46060">Rejected</strong> with a note.
+        </p>
+      </details>
+
+      <details style="background:var(--bg-panel);border:1px solid var(--border-dark);border-radius:var(--radius-lg);padding:var(--space-3);margin-bottom:10px">
+        <summary style="font-weight:600;font-size:.95rem;color:var(--text-on-dark);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center">
+          Can I edit my entry after submitting?
+          <span style="color:var(--amber);font-size:12px">▾</span>
+        </summary>
+        <p style="margin-top:var(--space-2);color:var(--text-on-dark-muted);font-size:.9rem;line-height:1.75">
+          Yes. Go to your Dashboard, find the entry, and click Edit. After editing, the entry returns to Pending status for re-review. This ensures the archive maintains accuracy.
+        </p>
+      </details>
+
+      <details style="background:var(--bg-panel);border:1px solid var(--border-dark);border-radius:var(--radius-lg);padding:var(--space-3);margin-bottom:10px">
+        <summary style="font-weight:600;font-size:.95rem;color:var(--text-on-dark);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center">
+          What makes a good entry?
+          <span style="color:var(--amber);font-size:12px">▾</span>
+        </summary>
+        <div style="margin-top:var(--space-2);color:var(--text-on-dark-muted);font-size:.9rem;line-height:1.75">
+          <p>Good entries follow these principles:</p>
+          <ul style="padding-left:1.25rem;margin-top:.5rem">
+            <li style="margin-bottom:6px"><strong style="color:var(--text-on-dark)">Specific title</strong> — describe exactly what the knowledge is, not just a broad topic.</li>
+            <li style="margin-bottom:6px"><strong style="color:var(--text-on-dark)">Clear summary</strong> — one sentence that explains what the knowledge is and why it matters.</li>
+            <li style="margin-bottom:6px"><strong style="color:var(--text-on-dark)">Detailed body</strong> — explain the practice in full. How was it done? Who practiced it? Why did it disappear?</li>
+            <li style="margin-bottom:6px"><strong style="color:var(--text-on-dark)">Accurate region and era</strong> — helps researchers and future Keepers find your entry.</li>
+          </ul>
+        </div>
+      </details>
+    </section>
+
+    <!-- Voting -->
+    <section id="voting" style="margin-bottom:var(--space-8)">
+      <h2 style="color:var(--text-on-dark);font-size:1.4rem;margin-bottom:var(--space-4);padding-bottom:12px;border-bottom:1px solid var(--border-dark)">
+        Voting &amp; Comments
+      </h2>
+
+      <details style="background:var(--bg-panel);border:1px solid var(--border-dark);border-radius:var(--radius-lg);padding:var(--space-3);margin-bottom:10px">
+        <summary style="font-weight:600;font-size:.95rem;color:var(--text-on-dark);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center">
+          What does Preserve vs Dispute mean?
+          <span style="color:var(--amber);font-size:12px">▾</span>
+        </summary>
+        <p style="margin-top:var(--space-2);color:var(--text-on-dark-muted);font-size:.9rem;line-height:1.75">
+          <strong style="color:#6BC48A">▲ Preserve</strong> means you believe this knowledge is valuable and accurate — vote this if you want to see it stay in the archive. <strong style="color:#C46060">▼ Dispute</strong> means you have factual concerns or believe the entry contains inaccuracies. Voting is anonymous and can be changed at any time.
+        </p>
+      </details>
+
+      <details style="background:var(--bg-panel);border:1px solid var(--border-dark);border-radius:var(--radius-lg);padding:var(--space-3);margin-bottom:10px">
+        <summary style="font-weight:600;font-size:.95rem;color:var(--text-on-dark);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center">
+          Do I need an account to vote?
+          <span style="color:var(--amber);font-size:12px">▾</span>
+        </summary>
+        <p style="margin-top:var(--space-2);color:var(--text-on-dark-muted);font-size:.9rem;line-height:1.75">
+          Yes. You must be signed in to vote or comment. This prevents duplicate votes and keeps the archive trustworthy. <a href="/lost-knowledge/register.html">Register for free</a> to participate.
+        </p>
+      </details>
+
+      <details style="background:var(--bg-panel);border:1px solid var(--border-dark);border-radius:var(--radius-lg);padding:var(--space-3);margin-bottom:10px">
+        <summary style="font-weight:600;font-size:.95rem;color:var(--text-on-dark);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center">
+          Can I delete my own comment?
+          <span style="color:var(--amber);font-size:12px">▾</span>
+        </summary>
+        <p style="margin-top:var(--space-2);color:var(--text-on-dark-muted);font-size:.9rem;line-height:1.75">
+          Yes. A delete button appears next to comments you have posted. Admins can also delete any comment that violates community guidelines.
+        </p>
+      </details>
+    </section>
+
+    <!-- Account -->
+    <section id="account" style="margin-bottom:var(--space-8)">
+      <h2 style="color:var(--text-on-dark);font-size:1.4rem;margin-bottom:var(--space-4);padding-bottom:12px;border-bottom:1px solid var(--border-dark)">
+        Your Account
+      </h2>
+
+      <details style="background:var(--bg-panel);border:1px solid var(--border-dark);border-radius:var(--radius-lg);padding:var(--space-3);margin-bottom:10px">
+        <summary style="font-weight:600;font-size:.95rem;color:var(--text-on-dark);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center">
+          What is the dashboard?
+          <span style="color:var(--amber);font-size:12px">▾</span>
+        </summary>
+        <p style="margin-top:var(--space-2);color:var(--text-on-dark-muted);font-size:.9rem;line-height:1.75">
+          Your dashboard shows all your submitted entries, their current status (Pending / Approved / Rejected), the votes each received, and your saved bookmarks. You can also manage and delete entries from there.
+        </p>
+      </details>
+
+      <details style="background:var(--bg-panel);border:1px solid var(--border-dark);border-radius:var(--radius-lg);padding:var(--space-3);margin-bottom:10px">
+        <summary style="font-weight:600;font-size:.95rem;color:var(--text-on-dark);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center">
+          What are bookmarks?
+          <span style="color:var(--amber);font-size:12px">▾</span>
+        </summary>
+        <p style="margin-top:var(--space-2);color:var(--text-on-dark-muted);font-size:.9rem;line-height:1.75">
+          On any entry page, click <strong style="color:var(--text-on-dark)">☆ Save Entry</strong> to bookmark it. Bookmarked entries are collected in the Saved Entries tab of your dashboard for quick access later. You can remove bookmarks at any time.
+        </p>
+      </details>
+
+      <details style="background:var(--bg-panel);border:1px solid var(--border-dark);border-radius:var(--radius-lg);padding:var(--space-3);margin-bottom:10px">
+        <summary style="font-weight:600;font-size:.95rem;color:var(--text-on-dark);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center">
+          How do I view my public profile?
+          <span style="color:var(--amber);font-size:12px">▾</span>
+        </summary>
+        <p style="margin-top:var(--space-2);color:var(--text-on-dark-muted);font-size:.9rem;line-height:1.75">
+          Click <strong style="color:var(--text-on-dark)">My Profile</strong> in your dashboard sidebar, or visit <code style="background:var(--bg-void);padding:2px 6px;border-radius:4px;font-family:var(--font-mono)">/profile.php?username=yourname</code>. Your profile is public and shows all your approved entries and your contribution stats.
+        </p>
+      </details>
+    </section>
+
+    <!-- Contact box -->
+    <div style="background:var(--bg-panel);border:1px solid var(--border-gold);border-radius:var(--radius-xl);padding:var(--space-4);text-align:center">
+      <div style="font-size:1.5rem;margin-bottom:10px">✉️</div>
+      <h3 style="color:var(--text-on-dark);margin-bottom:8px">Still need help?</h3>
+      <p style="color:var(--text-on-dark-muted);font-size:.9rem;max-width:400px;margin:0 auto var(--space-3)">
+        Can't find what you're looking for? Reach out to the archive administrators directly.
+      </p>
+      <a href="mailto:admin@lostknowledge.local" class="btn btn-amber">Contact Admin</a>
+    </div>
+
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-ornament"><span style="color:var(--gold);font-size:12px">✦</span></div>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <img src="/lost-knowledge/assets/logo.png" alt="Lost Knowledge" style="width:40px;height:40px;border-radius:4px;object-fit:cover">
+          <div class="footer-logo-name">Lost Knowledge</div>
+        </div>
+        <p class="footer-tagline">Preserving forgotten traditions, dying crafts, and ancient wisdom for future generations.</p>
+        <div class="footer-est"><span>✦</span> Est. 2026 <span>✦</span></div>
+      </div>
+      <div class="footer-col">
+        <h4>Archive</h4>
+        <ul>
+          <li><a href="/lost-knowledge/index.html">Browse Entries</a></li>
+          <li><a href="/lost-knowledge/submit.php">Submit Entry</a></li>
+          <li><a href="/lost-knowledge/index.html#archive">Categories</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Community</h4>
+        <ul>
+          <li><a href="/lost-knowledge/about.php">About Us</a></li>
+          <li><a href="/lost-knowledge/register.html">Become a Keeper</a></li>
+          <li><a href="/lost-knowledge/guidelines.html">Guidelines</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Support</h4>
+        <ul>
+          <li><a href="/lost-knowledge/help.html">Help Center</a></li>
+          <li><a href="/lost-knowledge/privacy.html">Privacy Policy</a></li>
+          <li><a href="/lost-knowledge/terms.html">Terms of Service</a></li>
+          <li><a href="/lost-knowledge/admin/admin_dashboard.php" class="admin-link">Admin Dashboard</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Lost Knowledge</span>
+      <span class="footer-bottom-diamond">✦</span>
+      <span>Preserving wisdom for tomorrow</span>
+    </div>
+  </div>
+</footer>
+
+<script src="/lost-knowledge/assets/js/script.js"></script>
+</body>
+</html>
