@@ -15,13 +15,17 @@ CREATE TABLE IF NOT EXISTS users (
     id          INT UNSIGNED    NOT NULL AUTO_INCREMENT,
     username    VARCHAR(50)     NOT NULL UNIQUE,
     email       VARCHAR(150)    NOT NULL UNIQUE,
-    password    VARCHAR(255)    NOT NULL,          -- bcrypt hash
+    phone       VARCHAR(15)     DEFAULT NULL UNIQUE,
+    google_id   VARCHAR(255)    DEFAULT NULL,
+    password    VARCHAR(255)    DEFAULT NULL,          -- bcrypt hash (NULL for Google OAuth users)
     role        ENUM('user','admin') NOT NULL DEFAULT 'user',
     created_at  DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at  DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
-    INDEX idx_email    (email),
-    INDEX idx_username (username)
+    INDEX idx_email     (email),
+    INDEX idx_username  (username),
+    INDEX idx_phone     (phone),
+    INDEX idx_google_id (google_id)
 ) ENGINE=InnoDB;
 
 -- ============================================================
@@ -103,9 +107,39 @@ INSERT INTO categories (name, slug, description) VALUES
 ('Ritual & Ceremony',   'ritual-ceremony',    'Sacred rites and ceremonial traditions no longer practiced');
 
 -- ============================================================
+-- TABLE: user_tokens (for Remember Me functionality)
+-- ============================================================
+CREATE TABLE IF NOT EXISTS user_tokens (
+    id          INT UNSIGNED    NOT NULL AUTO_INCREMENT,
+    user_id     INT UNSIGNED    NOT NULL,
+    token       VARCHAR(64)     NOT NULL UNIQUE,
+    expires     DATETIME        NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY fk_token_user (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    INDEX idx_user_token (user_id, token)
+) ENGINE=InnoDB;
+
+-- ============================================================
+-- TABLE: password_resets (for Forgot Password functionality)
+-- ============================================================
+CREATE TABLE IF NOT EXISTS password_resets (
+    id          INT UNSIGNED    NOT NULL AUTO_INCREMENT,
+    user_id     INT UNSIGNED    NOT NULL,
+    token       VARCHAR(64)     NOT NULL UNIQUE,
+    expires_at  DATETIME        NOT NULL,
+    used        TINYINT(1)      NOT NULL DEFAULT 0,
+    created_at  DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    FOREIGN KEY fk_reset_user (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    INDEX idx_reset_token (token),
+    INDEX idx_user_expires (user_id, expires_at)
+) ENGINE=InnoDB;
+
+-- ============================================================
 -- SEED: Default admin user  (password: Admin@1234)
 -- ============================================================
-INSERT INTO users (username, email, password, role) VALUES
-('admin', 'admin@lostknowledge.local',
+INSERT INTO users (username, email, phone, password, role) VALUES
+('admin', 'admin@lostknowledge.local', NULL,
  '$2y$12$eImiTXuWVxfM37uY4JANjO7lRKxwf5VVbQ9C9wOWdHs3wN1VZHfJO',
  'admin');
+

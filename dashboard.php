@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/config/auth.php';
 require_once __DIR__ . '/config/db.php';
+require_once __DIR__ . '/config/notify.php';
 require_login('/dashboard.php');
 
 $userId   = current_user_id();
@@ -59,14 +60,18 @@ $err = $_SESSION['flash_error']   ?? ''; unset($_SESSION['flash_error']);
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard — Lost Knowledge</title>
   <link rel="stylesheet" href="/lost-knowledge/assets/css/style.css">
+  <link rel="stylesheet" href="/lost-knowledge/assets/css/features.css">
 </head>
 <body>
 
 <header class="site-header">
   <div class="container nav-inner">
     <a href="/lost-knowledge/index.html" class="site-logo">
-      <span class="logo-mark">Lost Knowledge</span>
-      <div class="logo-dot"></div>
+      <img src="/lost-knowledge/assets/logo.png" alt="Lost Knowledge" class="nav-logo-img">
+      <div class="logo-text">
+        <span class="logo-mark">Lost Knowledge</span>
+        <span class="logo-sub">Archive of Vanishing Wisdom</span>
+      </div>
     </a>
     <button class="nav-toggle" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
     <nav class="nav-links">
@@ -104,6 +109,7 @@ $err = $_SESSION['flash_error']   ?? ''; unset($_SESSION['flash_error']);
         <ul class="dash-nav">
           <li><a class="active" href="/lost-knowledge/dashboard.php">📜 &nbsp;My Entries</a></li>
           <li><a href="/lost-knowledge/dashboard.php?tab=bookmarks">🔖 &nbsp;Saved Entries</a></li>
+          <li><a href="/lost-knowledge/edit_profile.php">✏️ &nbsp;Edit Profile</a></li>
           <li><a href="/lost-knowledge/profile.php?username=<?= urlencode($username) ?>">👤 &nbsp;My Profile</a></li>
           <li><a href="/lost-knowledge/submit.php">✦ &nbsp;New Entry</a></li>
           <?php if ($role==='admin'): ?>
@@ -111,6 +117,23 @@ $err = $_SESSION['flash_error']   ?? ''; unset($_SESSION['flash_error']);
           <?php endif; ?>
           <li><a href="/lost-knowledge/logout.php">↩ &nbsp;Sign Out</a></li>
         </ul>
+
+        <?php
+          // Karma display
+          $userKarma = 0;
+          try { $kStmt = $pdo->prepare('SELECT karma FROM users WHERE id = ?'); $kStmt->execute([$userId]); $userKarma = (int)$kStmt->fetchColumn(); } catch(Exception $e) {}
+          [$kLevel, $kClass] = karma_level($userKarma);
+        ?>
+        <div style="margin-top:1.5rem;padding:1rem;background:var(--bg-panel);border:1px solid var(--border-dark);border-radius:var(--radius-lg);text-align:center">
+          <div style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text-on-dark-faint);margin-bottom:8px">Reputation</div>
+          <div style="font-size:1.5rem;font-weight:700;color:var(--amber-light)"><?= number_format($userKarma) ?></div>
+          <div style="margin-top:4px"><span class="karma-badge <?= $kClass ?>">✦ <?= $kLevel ?></span></div>
+          <div style="font-size:11px;color:var(--text-on-dark-faint);margin-top:8px;line-height:1.5">
+            Submit entries, get votes, and contribute to grow your karma.
+          </div>
+        </div>
+
+
       </aside>
 
       <!-- Main -->
@@ -234,5 +257,6 @@ $err = $_SESSION['flash_error']   ?? ''; unset($_SESSION['flash_error']);
 </footer>
 
 <script src="/lost-knowledge/assets/js/script.js"></script>
+<script src="/lost-knowledge/assets/js/features.js"></script>
 </body>
 </html>
