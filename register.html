@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Create your Lost Knowledge account and become a Keeper of forgotten wisdom.">
+  <title>Register — Lost Knowledge</title>
+  <link rel="stylesheet" href="/lost-knowledge/assets/css/style.css">
+  <link rel="stylesheet" href="/lost-knowledge/assets/css/features.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container nav-inner">
+    <a href="/lost-knowledge/index.html" class="site-logo">
+      <img src="/lost-knowledge/assets/logo.png" alt="Lost Knowledge" class="nav-logo-img">
+      <div class="logo-text">
+        <span class="logo-mark">Lost Knowledge</span>
+        <span class="logo-sub">Archive of Vanishing Wisdom</span>
+      </div>
+    </a>
+    <button class="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="nav-links" aria-label="Main navigation">
+      <a href="/lost-knowledge/index.html"    class="nav-link">Archive</a>
+      <a href="/lost-knowledge/about.php"    class="nav-link">About</a>
+      <a href="/lost-knowledge/register.html" class="nav-link active">Register</a>
+      <a href="/lost-knowledge/login.html"    class="nav-link">Sign In</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page-header">
+  <div class="container">
+    <div class="section-label">Join the keepers</div>
+    <h1>Create your account</h1>
+    <p>Register to submit entries, vote on knowledge, and help preserve what matters.</p>
+  </div>
+</div>
+
+<main>
+  <div class="form-wrap">
+    <div class="form-card">
+
+      <!-- Flash message area — filled by JS if redirected with ?error= -->
+      <div id="flashMsg" style="display:none" class="alert alert-error" role="alert"></div>
+
+      <div class="form-card-header">
+        <h2>Sign up</h2>
+        <p>Already have an account? <a href="/lost-knowledge/login.html">Sign in here</a></p>
+      </div>
+
+      <!-- Google Sign-Up Button -->
+      <a href="/lost-knowledge/config/google_redirect.php" class="btn-google" id="googleRegisterBtn">
+        <svg class="google-icon" viewBox="0 0 24 24" width="20" height="20">
+          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
+          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+        </svg>
+        Sign up with Google
+      </a>
+
+      <div class="oauth-divider">
+        <span>or register with credentials</span>
+      </div>
+
+      <!--
+        SEPARATION OF CONCERNS:
+        This HTML file handles ONLY the UI.
+        All validation and DB logic lives in register_process.php.
+        The form POSTs directly to the PHP handler.
+      -->
+      <form id="registerForm" method="POST" action="/lost-knowledge/register_process.php" novalidate>
+
+        <div class="form-group">
+          <label for="username">Username <span class="req">*</span></label>
+          <input type="text" id="username" name="username"
+                 placeholder="e.g. john_keeper"
+                 autocomplete="username"
+                 maxlength="50">
+          <span class="field-error"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email address <span class="req">*</span></label>
+          <input type="email" id="email" name="email"
+                 placeholder="you@example.com"
+                 autocomplete="email">
+          <span class="field-error"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Phone number <span class="req">*</span></label>
+          <input type="tel" id="phone" name="phone"
+                 placeholder="e.g. 9876543210"
+                 autocomplete="tel"
+                 maxlength="15">
+          <span class="field-error"></span>
+          <small style="color:var(--text-on-dark-faint);font-size:.78rem;">10-digit Indian mobile number (starts with 6–9)</small>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="password">Password <span class="req">*</span></label>
+            <input type="password" id="password" name="password"
+                   placeholder="Min. 8 characters"
+                   autocomplete="new-password">
+            <span class="field-error"></span>
+          </div>
+          <div class="form-group">
+            <label for="password_confirm">Confirm <span class="req">*</span></label>
+            <input type="password" id="password_confirm" name="password_confirm"
+                   placeholder="Repeat password"
+                   autocomplete="new-password">
+            <span class="field-error"></span>
+          </div>
+        </div>
+
+        <p style="font-size:.8rem;color:var(--ink-300);margin-bottom:1.25rem">
+          Password needs 8+ characters, one uppercase letter, and one number.
+        </p>
+
+        <hr class="form-divider">
+
+        <button type="submit" class="btn btn-primary btn-full btn-lg">Create account →</button>
+      </form>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer" style="padding:1.5rem 0">
+  <div class="container">
+    <div class="footer-bottom">
+      <span>&copy; <span id="yr"></span> Lost Knowledge</span>
+      <span><a href="/lost-knowledge/about.php" style="color:var(--ink-300)">About</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="/lost-knowledge/assets/js/script.js"></script>
+<script src="/lost-knowledge/assets/js/features.js"></script>
+<script>
+  document.getElementById('yr').textContent = new Date().getFullYear();
+
+  // Show error from URL if register_process.php redirected back with ?error=
+  const params = new URLSearchParams(location.search);
+  const err    = params.get('error');
+  if (err) {
+    const box = document.getElementById('flashMsg');
+    box.textContent = decodeURIComponent(err);
+    box.style.display = 'flex';
+  }
+</script>
+</body>
+</html>

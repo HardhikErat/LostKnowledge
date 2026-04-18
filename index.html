@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Lost Knowledge — a community archive preserving forgotten traditions, dying crafts, and ancient wisdom before they vanish forever.">
+  <!-- Open Graph / Social Cards -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Lost Knowledge — Archive of Vanishing Wisdom">
+  <meta property="og:description" content="A community archive preserving forgotten traditions, dying crafts, and ancient wisdom.">
+  <meta property="og:url" content="http://localhost/lost-knowledge/">
+  <meta name="twitter:card" content="summary_large_image">
+  <title>Lost Knowledge — Archive of Vanishing Wisdom</title>
+  <link rel="stylesheet" href="/lost-knowledge/assets/css/style.css">
+  <link rel="stylesheet" href="/lost-knowledge/assets/css/features.css">
+</head>
+<body>
+
+<!-- ═══ NAV ════════════════════════════════════════════════ -->
+<header class="site-header">
+  <div class="container nav-inner">
+    <a href="/lost-knowledge/index.html" class="site-logo">
+      <img src="/lost-knowledge/assets/logo.png" alt="Lost Knowledge" class="nav-logo-img">
+      <div class="logo-text">
+        <span class="logo-mark">Lost Knowledge</span>
+        <span class="logo-sub">Archive of Vanishing Wisdom</span>
+      </div>
+    </a>
+
+    <button class="nav-toggle" aria-label="Menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav class="nav-links" aria-label="Main navigation">
+      <a href="/lost-knowledge/index.html"    class="nav-link active">Archive</a>
+      <a href="/lost-knowledge/explore_map.html" class="nav-link">🗺️ Map</a>
+      <a href="/lost-knowledge/about.php"    class="nav-link">About</a>
+      <div class="nav-sep"></div>
+      <a href="/lost-knowledge/register.html" class="nav-link">Register</a>
+      <a href="/lost-knowledge/login.html"    class="nav-link">Sign In</a>
+      <a href="/lost-knowledge/submit.php"    class="nav-link nav-cta">✦ Submit Entry</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ═══ HERO ════════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-grid">
+
+      <!-- Left -->
+      <div>
+        <!-- Eyebrow pill badge with diamonds (matching Figma) -->
+        <div class="hero-eyebrow anim-1">
+          <span class="hero-eyebrow-diamond">✦</span>
+          <span class="hero-eyebrow-text">Preserve · Remember · Share</span>
+          <span class="hero-eyebrow-diamond">✦</span>
+        </div>
+
+        <h1 class="hero-title anim-2">
+          Knowledge lost is a world <em>diminished.</em>
+        </h1>
+
+        <p class="hero-desc anim-3">
+          A community archive preserving forgotten traditions, dying crafts,
+          and ancient wisdom before they vanish forever. Join us in
+          recording what remains.
+        </p>
+
+        <div class="hero-actions anim-4">
+          <a href="#archive" class="btn btn-primary btn-lg">Explore the Archive</a>
+          <a href="/lost-knowledge/register.html" class="btn btn-outline btn-lg">Become a Keeper</a>
+        </div>
+      </div>
+
+      <!-- Right: dark panel with recent entries -->
+      <aside class="hero-panel anim-4" aria-label="Recent entries">
+        <div class="hero-panel-title">Recent Entries</div>
+
+        <!-- Featured image -->
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Stick_charts.jpg/640px-Stick_charts.jpg"
+          alt="Polynesian stick chart navigation tool"
+          class="featured-img"
+          onerror="this.style.display='none'">
+
+        <!-- Entry row 1 -->
+        <div class="hero-mini-card" onclick="window.location='/lost-knowledge/index.html?cat=navigation'">
+          <div class="hmc-badge">⚓ Navigation</div>
+          <div class="hmc-info">
+            <div class="hmc-title">Polynesian Stick Charts: Navigation by Wave Patterns</div>
+            <div class="hmc-votes">
+              <span class="hmc-vote-up">↑ 87</span>
+              <span>✦</span>
+              <span>Marshall Islands</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Entry row 2 -->
+        <div class="hero-mini-card" onclick="window.location='/lost-knowledge/index.html?cat=language-scripts'">
+          <div class="hmc-badge">𓂀 Language &amp; Scripts</div>
+          <div class="hmc-info">
+            <div class="hmc-title">Khipu: The Inca Knot-Based Writing System</div>
+            <div class="hmc-votes">
+              <span class="hmc-vote-up">↑ 124</span>
+              <span>✦</span>
+              <span>Andes, South America</span>
+            </div>
+          </div>
+        </div>
+
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ STATS — light section ══════════════════════════════ -->
+<section class="stats-strip" role="region" aria-label="Archive statistics">
+  <div class="container">
+    <div class="stats-header">The Archive in Numbers</div>
+    <div class="stats-inner">
+      <div class="stat-item">
+        <span class="stat-num" id="statEntries" data-target="0">0</span>
+        <span class="stat-lbl">Entries Recorded</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num" id="statUsers" data-target="0">0</span>
+        <span class="stat-lbl">Keepers</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num" data-target="8">8</span>
+        <span class="stat-lbl">Categories</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num" id="statVotes" data-target="0">0</span>
+        <span class="stat-lbl">Votes Cast</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CATEGORIES — dark ══════════════════════════════════ -->
+<section class="categories-section section">
+  <div class="container">
+    <div class="categories-header">
+      <!-- Eight Fields badge with diamonds -->
+      <div style="display:flex;justify-content:center;align-items:center;gap:10px;margin-bottom:24px">
+        <span style="color:var(--gold);font-size:10px">✦</span>
+        <span style="font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-brown);background:var(--text-on-dark);padding:5px 16px;border-radius:2px;border:1px solid var(--amber-pale)">Eight Fields</span>
+        <span style="color:var(--gold);font-size:10px">✦</span>
+      </div>
+      <h2 style="color:var(--text-on-dark);margin-bottom:16px">Lost Knowledge</h2>
+      <!-- Diamond divider -->
+      <div style="display:flex;align-items:center;justify-content:center;gap:12px">
+        <div style="width:120px;height:1px;background:var(--border-gold)"></div>
+        <span style="color:var(--gold);font-size:10px">✦</span>
+        <div style="width:120px;height:1px;background:var(--border-gold)"></div>
+      </div>
+    </div>
+
+    <div class="cat-grid">
+      <a href="/lost-knowledge/index.html?cat=ancient-crafts"    class="cat-pill"><span class="cat-pill-icon">🏺</span><span class="cat-pill-name">Ancient Crafts</span></a>
+      <a href="/lost-knowledge/index.html?cat=oral-traditions"   class="cat-pill"><span class="cat-pill-icon">📯</span><span class="cat-pill-name">Oral Traditions</span></a>
+      <a href="/lost-knowledge/index.html?cat=herbal-medicine"   class="cat-pill"><span class="cat-pill-icon">🌿</span><span class="cat-pill-name">Herbal Medicine</span></a>
+      <a href="/lost-knowledge/index.html?cat=agricultural-lore" class="cat-pill"><span class="cat-pill-icon">🌾</span><span class="cat-pill-name">Agricultural Lore</span></a>
+      <a href="/lost-knowledge/index.html?cat=architecture"      class="cat-pill"><span class="cat-pill-icon">🏛️</span><span class="cat-pill-name">Architecture</span></a>
+      <a href="/lost-knowledge/index.html?cat=navigation"        class="cat-pill"><span class="cat-pill-icon">⚓</span><span class="cat-pill-name">Navigation</span></a>
+      <a href="/lost-knowledge/index.html?cat=language-scripts"  class="cat-pill"><span class="cat-pill-icon">𓂀</span><span class="cat-pill-name">Language &amp; Scripts</span></a>
+      <a href="/lost-knowledge/index.html?cat=ritual-ceremony"   class="cat-pill"><span class="cat-pill-icon">🔥</span><span class="cat-pill-name">Ritual &amp; Ceremony</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ARCHIVE — dark ════════════════════════════════════= -->
+<main class="archive-section section" id="archive" role="main">
+  <div class="container">
+    <div class="archive-header">
+      <h2 class="archive-title">Browse the Archive</h2>
+      <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-top:12px">
+        <div style="width:80px;height:1px;background:var(--border-gold)"></div>
+        <span style="color:var(--gold);font-size:10px">✦</span>
+        <div style="width:80px;height:1px;background:var(--border-gold)"></div>
+      </div>
+    </div>
+
+    <!-- Filter bar -->
+    <div class="filter-bar" role="search">
+      <input type="text" id="searchInput"
+             placeholder="Search traditions, crafts, wisdom…"
+             aria-label="Search entries" autocomplete="off">
+      <select id="catSelect" aria-label="Filter by category">
+        <option value="">All Categories</option>
+        <option value="ancient-crafts">Ancient Crafts</option>
+        <option value="oral-traditions">Oral Traditions</option>
+        <option value="herbal-medicine">Herbal Medicine</option>
+        <option value="agricultural-lore">Agricultural Lore</option>
+        <option value="architecture">Architecture</option>
+        <option value="navigation">Navigation</option>
+        <option value="language-scripts">Language &amp; Scripts</option>
+        <option value="ritual-ceremony">Ritual &amp; Ceremony</option>
+      </select>
+    </div>
+
+    <!-- Entry cards — loaded by JS -->
+    <div class="entries-grid" id="entriesGrid" aria-live="polite">
+      <div style="grid-column:1/-1;text-align:center;padding:64px">
+        <div class="spinner"></div>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <nav class="pagination" id="pagination" aria-label="Pagination"></nav>
+  </div>
+</main>
+
+<!-- ═══ CTA — light parchment ══════════════════════════════ -->
+<section class="cta-section">
+  <div class="container">
+    <!-- Circle ornament -->
+    <div class="cta-circle">✦</div>
+
+    <!-- JOIN THE MISSION badge -->
+    <div style="margin-bottom:32px">
+      <span class="cta-badge">Join the Mission</span>
+    </div>
+
+    <!-- Italic amber heading "remains" -->
+    <h2>…recording what <em>remains.</em></h2>
+
+    <p>
+      Every tradition lost is a thread cut from humanity's tapestry. If you know of a
+      dying craft, forgotten technique, or vanishing wisdom, share it with the world
+      before it's too late.
+    </p>
+
+    <a href="/lost-knowledge/register.html" class="btn btn-amber btn-lg">
+      ✦ Start Recording ✦
+    </a>
+
+    <!-- Bottom divider -->
+    <div style="display:flex;align-items:center;justify-content:center;gap:16px;margin-top:48px">
+      <div style="width:100px;height:1px;background:var(--border-gold)"></div>
+      <span style="color:var(--gold);font-size:10px">✦</span>
+      <div style="width:100px;height:1px;background:var(--border-gold)"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER — light parchment ═══════════════════════════ -->
+<footer class="site-footer" role="contentinfo">
+  <div class="container">
+
+    <!-- Top diamond divider -->
+    <div class="footer-ornament">
+      <span style="color:var(--gold);font-size:12px">✦</span>
+    </div>
+
+    <div class="footer-grid">
+      <!-- Brand -->
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <div class="footer-logo-icon">📖</div>
+          <div class="footer-logo-name">Lost Knowledge</div>
+        </div>
+        <p class="footer-tagline">
+          Preserving forgotten traditions, dying crafts, and
+          ancient wisdom for future generations.
+        </p>
+        <div class="footer-est">
+          <span>✦</span> Est. 2026 <span>✦</span>
+        </div>
+      </div>
+
+      <!-- Archive links -->
+      <div class="footer-col">
+        <h4>Archive</h4>
+        <ul>
+          <li><a href="/lost-knowledge/index.html">Browse Entries</a></li>
+          <li><a href="/lost-knowledge/submit.php">Submit Entry</a></li>
+          <li><a href="/lost-knowledge/index.html#archive">Categories</a></li>
+        </ul>
+      </div>
+
+      <!-- Community links -->
+      <div class="footer-col">
+        <h4>Community</h4>
+        <ul>
+          <li><a href="/lost-knowledge/about.php">About Us</a></li>
+          <li><a href="/lost-knowledge/register.html">Become a Keeper</a></li>
+          <li><a href="/lost-knowledge/guidelines.html">Guidelines</a></li>
+        </ul>
+      </div>
+
+      <!-- Support links -->
+      <div class="footer-col">
+        <h4>Support</h4>
+        <ul>
+          <li><a href="/lost-knowledge/help.html">Help Center</a></li>
+          <li><a href="/lost-knowledge/privacy.html">Privacy Policy</a></li>
+          <li><a href="/lost-knowledge/terms.html">Terms of Service</a></li>
+          <li><a href="/lost-knowledge/admin/admin_dashboard.php" class="admin-link">Admin Dashboard</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2026 Lost Knowledge</span>
+      <span class="footer-bottom-diamond">✦</span>
+      <span>Preserving wisdom for tomorrow</span>
+    </div>
+  </div>
+</footer>
+
+<script src="/lost-knowledge/assets/js/script.js"></script>
+<script src="/lost-knowledge/assets/js/features.js"></script>
+<script>
+  // Set category from URL param
+  window.addEventListener('load', function () {
+    const urlCat = new URLSearchParams(location.search).get('cat');
+    if (urlCat) {
+      const sel = document.getElementById('catSelect');
+      if (sel) { sel.value = urlCat; sel.dispatchEvent(new Event('change')); }
+    }
+    const urlTag = new URLSearchParams(location.search).get('tag');
+    if (urlTag) {
+      document.getElementById('archiveTitle')?.insertAdjacentHTML('afterend',
+        `<div class="tag-list" style="margin-bottom:1rem"><span class="tag-pill">#${urlTag} <a href="/lost-knowledge/index.html" style="margin-left:6px;color:var(--amber-light)">✕</a></span></div>`);
+    }
+  });
+</script>
+</body>
+</html>
