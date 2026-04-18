@@ -1,4 +1,3 @@
-<?php if (session_status() === PHP_SESSION_NONE) session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,7 +8,6 @@
   <meta name="author" content="Lost Knowledge Archive">
   <title>About — Lost Knowledge</title>
   <link rel="stylesheet" href="/lost-knowledge/assets/css/style.css">
-  <link rel="stylesheet" href="/lost-knowledge/assets/css/features.css">
   <style>
     /* ── About-page specific styles ── */
 
@@ -293,7 +291,7 @@
 <header class="site-header">
   <div class="container nav-inner">
     <a href="/lost-knowledge/index.html" class="site-logo">
-      <img src="/lost-knowledge/assets/logo.png" alt="Lost Knowledge" class="nav-logo-img">
+      <div class="logo-icon">📖</div>
       <div class="logo-text">
         <span class="logo-mark">Lost Knowledge</span>
         <span class="logo-sub">Archive of Vanishing Wisdom</span>
@@ -304,7 +302,7 @@
     </button>
     <nav class="nav-links" aria-label="Main navigation">
       <a href="/lost-knowledge/index.html"    class="nav-link">Archive</a>
-      <a href="/lost-knowledge/about.php"    class="nav-link active">About</a>
+      <a href="/lost-knowledge/about.html"    class="nav-link active">About</a>
       <div class="nav-sep"></div>
       <a href="/lost-knowledge/register.html" class="nav-link">Register</a>
       <a href="/lost-knowledge/login.html"    class="nav-link">Sign In</a>
@@ -392,142 +390,33 @@
       <div class="gold-line"><span>✦</span></div>
     </div>
 
-    <!--
-      Module 1.2: <img> + <map> + <area> — Image Map
-      coords are calibrated for the rendered display width of the Wikipedia
-      SVG map (1200px natural size). Each area maps to the visual continent
-      position on that specific projection.
-
-      Projection: Natural Earth / Robinson-style (Wikipedia low-res world map)
-      Natural size: 1200 × 600 px
-      Coordinate system: pixels from top-left of the image at natural size.
-
-      Region bounding boxes (tested against the actual image):
-        North America  : x1=30,  y1=30,  x2=290, y2=340
-        South America  : x1=180, y1=330, x2=340, y2=560
-        Europe         : x1=470, y1=30,  x2=620, y2=240
-        Africa         : x1=460, y1=230, x2=650, y2=530
-        Middle East    : x1=620, y1=180, x2=730, y2=320
-        Central Asia   : x1=620, y1=30,  x2=820, y2=200
-        East Asia      : x1=810, y1=40,  x2=1010,y2=300
-        South Asia     : x1=720, y1=260, x2=870, y2=410
-        Southeast Asia : x1=860, y1=290, x2=1010,y2=450
-        Oceania        : x1=900, y1=410, x2=1180,y2=580
-        Russia/N.Asia  : x1=610, y1=30,  x2=1010,y2=140 (overlaps, handled last)
-    -->
-
-    <!-- Tooltip label shown on hover -->
-    <div id="mapTooltip" style="
-      display:none;
-      position:fixed;
-      background:var(--bg-void);
-      border:1px solid var(--border-gold);
-      color:var(--amber-light);
-      font-family:var(--font-display);
-      font-size:.85rem;
-      font-weight:600;
-      padding:6px 14px;
-      border-radius:4px;
-      pointer-events:none;
-      z-index:9999;
-      letter-spacing:.04em;
-      white-space:nowrap;
-    "></div>
-
-    <div class="map-wrap" style="position:relative;line-height:0">
+    <!-- Module 1.2: <img> + <map> + <area> — Image Map -->
+    <div class="map-wrap">
       <img
         id="worldMapImg"
         src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/World_map_-_low_resolution.svg/1200px-World_map_-_low_resolution.svg.png"
         alt="World map — click a region to explore knowledge entries from that area"
-        width="1200"
-        height="600"
+        width="1200" height="600"
         usemap="#worldmap"
-        style="cursor:crosshair;max-width:100%;height:auto;display:block"
+        style="cursor:crosshair"
         onerror="this.onerror=null;this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/World_map_blank_without_borders.svg/1200px-World_map_blank_without_borders.svg.png'">
 
-      <!--
-        All coords below are for the 1200×600 natural image size.
-        The browser automatically scales them proportionally when the
-        image is displayed at a different CSS width.
-        Shapes use polygon where possible for better fit.
-      -->
-      <map name="worldmap" id="worldmap">
-
-        <!-- North America: covers Canada, USA, Mexico, Caribbean -->
-        <area shape="poly"
-          coords="30,40, 290,40, 290,160, 260,180, 250,240, 230,260, 210,310, 185,335, 150,340, 100,300, 60,260, 30,200, 30,40"
-          href="#" alt="North America" title="North America"
-          onclick="filterRegion('North America');return false;">
-
-        <!-- South America -->
-        <area shape="poly"
-          coords="185,335, 215,330, 260,340, 290,360, 310,400, 320,450, 310,510, 290,555, 255,560, 225,530, 195,490, 175,440, 170,390, 175,355, 185,335"
-          href="#" alt="South America" title="South America"
-          onclick="filterRegion('South America');return false;">
-
-        <!-- Europe: UK, Scandinavia, France, Germany, Italy, Iberia etc. -->
-        <area shape="poly"
-          coords="460,40, 620,40, 625,80, 610,120, 590,160, 565,200, 540,230, 510,235, 480,220, 460,180, 455,130, 460,40"
-          href="#" alt="Europe" title="Europe"
-          onclick="filterRegion('Europe');return false;">
-
-        <!-- Africa -->
-        <area shape="poly"
-          coords="460,235, 510,235, 545,230, 580,240, 615,235, 640,260, 650,320, 645,400, 620,460, 600,520, 570,545, 540,540, 510,510, 490,460, 470,400, 455,340, 455,280, 460,235"
-          href="#" alt="Africa" title="Africa"
-          onclick="filterRegion('Africa');return false;">
-
-        <!-- Middle East: Arabian Peninsula, Iran, Iraq, Turkey -->
-        <area shape="poly"
-          coords="615,170, 730,170, 740,210, 740,280, 720,320, 690,330, 655,320, 630,280, 615,240, 610,200, 615,170"
-          href="#" alt="Middle East" title="Middle East"
-          onclick="filterRegion('Middle East');return false;">
-
-        <!-- Russia / North Asia (broad band across top) -->
-        <area shape="poly"
-          coords="615,40, 1010,40, 1010,140, 820,145, 730,165, 620,160, 615,40"
-          href="#" alt="Russia / North Asia" title="Russia / North Asia"
-          onclick="filterRegion('Russia / North Asia');return false;">
-
-        <!-- East Asia: China, Japan, Korea, Mongolia -->
-        <area shape="poly"
-          coords="820,145, 1010,145, 1010,310, 960,330, 900,300, 860,270, 840,230, 820,180, 820,145"
-          href="#" alt="East Asia" title="East Asia"
-          onclick="filterRegion('East Asia');return false;">
-
-        <!-- South Asia: India, Pakistan, Bangladesh, Sri Lanka -->
-        <area shape="poly"
-          coords="730,165, 820,175, 820,280, 800,340, 775,380, 755,410, 725,400, 710,360, 700,310, 700,240, 715,200, 730,165"
-          href="#" alt="South Asia" title="South Asia"
-          onclick="filterRegion('South Asia');return false;">
-
-        <!-- Southeast Asia: Thailand, Vietnam, Indonesia, Philippines -->
-        <area shape="poly"
-          coords="860,270, 960,280, 1005,310, 1010,400, 980,450, 940,460, 900,430, 870,390, 855,330, 850,290, 860,270"
-          href="#" alt="South East Asia" title="South East Asia"
-          onclick="filterRegion('South East Asia');return false;">
-
-        <!-- Oceania: Australia, New Zealand, Pacific Islands -->
-        <area shape="poly"
-          coords="920,415, 1010,405, 1090,415, 1170,435, 1180,490, 1140,545, 1080,560, 1010,545, 960,510, 920,470, 910,440, 920,415"
-          href="#" alt="Oceania / Pacific" title="Oceania / Pacific"
-          onclick="filterRegion('Oceania / Pacific');return false;">
-
+      <map name="worldmap">
+        <area shape="rect" coords="50,60,240,260"   href="#" alt="North America"   title="North America"   onclick="filterRegion('North America');return false;">
+        <area shape="rect" coords="130,260,270,440" href="#" alt="South America"   title="South America"   onclick="filterRegion('South America');return false;">
+        <area shape="rect" coords="330,50,490,220"  href="#" alt="Europe"          title="Europe"          onclick="filterRegion('Europe');return false;">
+        <area shape="rect" coords="310,220,490,440" href="#" alt="Africa"          title="Africa"          onclick="filterRegion('Africa');return false;">
+        <area shape="rect" coords="490,50,850,320"  href="#" alt="Asia"            title="Asia"            onclick="filterRegion('Asia');return false;">
+        <area shape="rect" coords="490,320,680,500" href="#" alt="South Asia"      title="South Asia"      onclick="filterRegion('South Asia');return false;">
+        <area shape="circle" coords="980,380,80"    href="#" alt="Oceania"         title="Oceania"         onclick="filterRegion('Oceania');return false;">
       </map>
     </div>
 
     <p class="map-hint">✦ Hover over a region to see its name. Click to filter archive entries.</p>
 
-    <div class="map-region-result" id="regionResult" style="display:none">
+    <div class="map-region-result" id="regionResult">
       <strong>✦ Region selected:</strong> <span id="regionName"></span> —
-      <a href="/lost-knowledge/index.html" style="color:var(--amber-light)" id="regionLink">Browse matching entries →</a>
-    </div>
-
-    <!-- Interactive Leaflet Map -->
-    <div style="margin-top:40px">
-      <h3 style="text-align:center;margin-bottom:16px;font-family:var(--font-display);color:var(--text-on-dark)">Interactive Map — Geolocated Entries</h3>
-      <p style="text-align:center;font-size:14px;color:var(--text-on-dark-faint);margin-bottom:20px">Click markers to view entry details and navigate to the full article.</p>
-      <div class="map-container" id="leafletMap" style="height:450px;border-radius:12px"></div>
+      <a href="/lost-knowledge/index.html" style="color:var(--amber-light)">Browse matching entries →</a>
     </div>
   </div>
 </section>
@@ -770,25 +659,9 @@
         <div class="gold-line"><span>✦</span></div>
       </div>
 
-      <!-- Flash messages from feedback_process.php -->
-      <?php
-        if (!empty($_SESSION['feedback_success'])) {
-          echo '<div class="alert alert-success" data-autohide style="margin-bottom:20px">'
-             . htmlspecialchars($_SESSION['feedback_success'])
-             . '</div>';
-          unset($_SESSION['feedback_success']);
-        }
-        $fbError = $_GET['feedback_error'] ?? '';
-        if ($fbError) {
-          echo '<div class="alert alert-error" style="margin-bottom:20px">'
-             . htmlspecialchars(urldecode($fbError))
-             . '</div>';
-        }
-      ?>
-
       <div class="contact-card">
-        <!-- Module 1.2: All form input types — submits to PHP backend -->
-        <form id="contactForm" method="POST" action="/lost-knowledge/feedback_process.php" novalidate>
+        <!-- Module 1.2: All form input types -->
+        <form id="contactForm" onsubmit="submitContact(event)" novalidate>
 
           <fieldset style="border:1px solid var(--border-dark);border-radius:6px;padding:20px;margin-bottom:20px">
             <legend style="font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);padding:0 8px">Personal Information</legend>
@@ -918,7 +791,9 @@
             <button type="submit" class="btn btn-amber">✦ Send Feedback</button>
           </div>
 
-          <!-- Success shown via PHP session flash on page reload -->
+          <div id="contactSuccess" style="display:none;margin-top:16px" class="alert alert-success">
+            ✅ Thank you for your feedback! We'll be in touch soon.
+          </div>
         </form>
       </div>
     </div>
@@ -951,17 +826,17 @@
       <div class="footer-col">
         <h4>Community</h4>
         <ul>
-          <li><a href="/lost-knowledge/about.php">About Us</a></li>
+          <li><a href="/lost-knowledge/about.html">About Us</a></li>
           <li><a href="/lost-knowledge/register.html">Become a Keeper</a></li>
-          <li><a href="/lost-knowledge/guidelines.html">Guidelines</a></li>
+          <li><a href="/lost-knowledge/about.html">Guidelines</a></li>
         </ul>
       </div>
       <div class="footer-col">
         <h4>Support</h4>
         <ul>
-          <li><a href="/lost-knowledge/help.html">Help Center</a></li>
-          <li><a href="/lost-knowledge/privacy.html">Privacy Policy</a></li>
-          <li><a href="/lost-knowledge/terms.html">Terms of Service</a></li>
+          <li><a href="/lost-knowledge/about.html">Help Center</a></li>
+          <li><a href="/lost-knowledge/about.html">Privacy Policy</a></li>
+          <li><a href="/lost-knowledge/about.html">Terms of Service</a></li>
           <li><a href="/lost-knowledge/admin/admin_dashboard.php" class="admin-link">Admin Dashboard</a></li>
         </ul>
       </div>
@@ -977,56 +852,23 @@
 <script src="/lost-knowledge/assets/js/script.js"></script>
 <script>
   function filterRegion(region) {
-    const result = document.getElementById('regionResult');
-    const name   = document.getElementById('regionName');
-    const link   = document.getElementById('regionLink');
-    if (result && name) {
-      name.textContent = region;
-      result.style.display = 'flex';
-      result.scrollIntoView({ behavior:'smooth', block:'nearest' });
-    }
-    if (link) link.href = '/lost-knowledge/index.html?search=' + encodeURIComponent(region);
+    const el = document.getElementById('regionResult');
+    document.getElementById('regionName').textContent = region;
+    el.style.display = 'block';
+    el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
-  // Floating tooltip that follows mouse over image map areas
-  (function() {
-    const tip = document.getElementById('mapTooltip');
-    if (!tip) return;
-    document.querySelectorAll('#worldmap area').forEach(function(area) {
-      area.addEventListener('mouseenter', function() {
-        tip.textContent = this.getAttribute('title');
-        tip.style.display = 'block';
-      });
-      area.addEventListener('mousemove', function(e) {
-        tip.style.left = (e.clientX + 14) + 'px';
-        tip.style.top  = (e.clientY - 36) + 'px';
-      });
-      area.addEventListener('mouseleave', function() {
-        tip.style.display = 'none';
-      });
-    });
-
-    // Rescale coords when image renders smaller than its natural 1200x600
-    var img = document.getElementById('worldMapImg');
-    if (!img) return;
-    function scaleMap() {
-      var sx = img.clientWidth  / (img.naturalWidth  || 1200);
-      var sy = img.clientHeight / (img.naturalHeight || 600);
-      if (sx === 0 || sy === 0) return;
-      document.querySelectorAll('#worldmap area').forEach(function(area) {
-        var orig = area.getAttribute('data-coords');
-        if (!orig) { orig = area.getAttribute('coords'); area.setAttribute('data-coords', orig); }
-        var scaled = orig.split(',').map(function(v, i) {
-          return Math.round(Number(v) * (i % 2 === 0 ? sx : sy));
-        }).join(',');
-        area.setAttribute('coords', scaled);
-      });
-    }
-    if (img.complete && img.naturalWidth) { scaleMap(); }
-    else { img.addEventListener('load', scaleMap); }
-    window.addEventListener('resize', scaleMap);
-  })();
+  function submitContact(e) {
+    e.preventDefault();
+    const name  = document.getElementById('cf-name').value.trim();
+    const email = document.getElementById('cf-email').value.trim();
+    if (!name || !email) { alert('Please fill in your name and email.'); return; }
+    const ok = document.getElementById('contactSuccess');
+    ok.style.display = 'flex';
+    e.target.reset();
+    document.getElementById('ratingVal').textContent = '5';
+    setTimeout(() => { ok.style.display = 'none'; }, 5000);
+  }
 </script>
-<script src="/lost-knowledge/assets/js/features.js"></script>
 </body>
 </html>

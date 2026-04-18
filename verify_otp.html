@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Enter the OTP sent to your mobile to reset your password.">
+  <title>Verify OTP — Lost Knowledge</title>
+  <link rel="stylesheet" href="/lost-knowledge/assets/css/style.css">
+  <link rel="stylesheet" href="/lost-knowledge/assets/css/features.css">
+  <style>
+    .otp-inputs { display:flex; gap:10px; justify-content:center; margin:1.5rem 0; }
+    .otp-inputs input {
+      width:52px; height:60px; text-align:center; font-size:1.6rem; font-weight:700;
+      font-family:var(--font-display); border:2px solid var(--border-dark);
+      border-radius:8px; background:var(--bg-panel); color:var(--amber-light);
+      transition:border-color .2s, box-shadow .2s; caret-color:var(--amber);
+    }
+    .otp-inputs input:focus {
+      outline:none; border-color:var(--amber);
+      box-shadow:0 0 0 3px rgba(184,119,42,.25);
+    }
+    .otp-info { text-align:center; margin:1rem 0; }
+    .otp-phone { font-weight:600; color:var(--amber-light); }
+    .otp-timer { color:var(--text-on-dark-muted); font-size:.85rem; margin-top:.5rem; }
+    .otp-timer strong { color:var(--amber-light); font-family:var(--font-mono,monospace); }
+    .resend-btn { background:none; border:none; color:var(--amber); cursor:pointer;
+      font-size:.85rem; text-decoration:underline; padding:0; margin-top:.5rem; }
+    .resend-btn:disabled { color:var(--text-on-dark-faint); cursor:not-allowed; text-decoration:none; }
+    .otp-debug-box { background:var(--bg-panel); border:2px dashed var(--border-gold);
+      border-radius:8px; padding:16px; margin:1rem 0; text-align:center; }
+    .otp-debug-box .otp-code { font-size:2rem; font-weight:700; letter-spacing:.3em;
+      color:var(--amber-light); font-family:var(--font-mono,monospace); }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container nav-inner">
+    <a href="/lost-knowledge/index.html" class="site-logo">
+      <img src="/lost-knowledge/assets/logo.png" alt="Lost Knowledge" class="nav-logo-img">
+      <div class="logo-text">
+        <span class="logo-mark">Lost Knowledge</span>
+        <span class="logo-sub">Archive of Vanishing Wisdom</span>
+      </div>
+    </a>
+    <button class="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="nav-links" aria-label="Main navigation">
+      <a href="/lost-knowledge/index.html"    class="nav-link">Archive</a>
+      <a href="/lost-knowledge/about.php"     class="nav-link">About</a>
+      <a href="/lost-knowledge/register.html" class="nav-link">Register</a>
+      <a href="/lost-knowledge/login.html"    class="nav-link">Sign In</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page-header">
+  <div class="container">
+    <div class="section-label">Verification</div>
+    <h1>Enter OTP</h1>
+    <p>We've sent a 6-digit code to your registered mobile number.</p>
+  </div>
+</div>
+
+<main>
+  <div class="form-wrap">
+    <div class="form-card">
+
+      <!-- Flash messages -->
+      <div id="flashMsg" style="display:none" class="alert alert-error" role="alert"></div>
+      <div id="flashSuccess" style="display:none" class="alert alert-success" role="alert"></div>
+
+      <div class="form-card-header" style="text-align:center">
+        <div style="font-size:3rem;margin-bottom:8px">🔐</div>
+        <h2>Verify your identity</h2>
+        <p>Enter the 6-digit code to continue</p>
+      </div>
+
+      <!-- OTP Debug Box (for localhost — shows the actual OTP) -->
+      <div class="otp-debug-box" id="otpDebugBox" style="display:none">
+        <p style="margin:0 0 6px;font-size:.78rem;color:var(--text-on-dark-muted)">
+          🧪 <strong>Dev Mode</strong> — SMS not available on localhost. Your OTP is:
+        </p>
+        <div class="otp-code" id="otpDebugCode"></div>
+      </div>
+
+      <form id="otpForm" method="POST" action="/lost-knowledge/verify_otp_process.php" novalidate>
+        <input type="hidden" name="token" id="tokenInput" value="">
+        <input type="hidden" name="otp" id="otpHidden" value="">
+
+        <!-- OTP Input Boxes -->
+        <div class="otp-inputs" id="otpInputs">
+          <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="one-time-code" data-idx="0" aria-label="Digit 1">
+          <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" data-idx="1" aria-label="Digit 2">
+          <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" data-idx="2" aria-label="Digit 3">
+          <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" data-idx="3" aria-label="Digit 4">
+          <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" data-idx="4" aria-label="Digit 5">
+          <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" data-idx="5" aria-label="Digit 6">
+        </div>
+
+        <span class="field-error" id="otpError" style="display:block;text-align:center"></span>
+
+        <!-- Timer -->
+        <div class="otp-info">
+          <div class="otp-timer">Code expires in <strong id="countdown">10:00</strong></div>
+          <button type="button" class="resend-btn" id="resendBtn" disabled>Resend OTP</button>
+        </div>
+
+        <hr class="form-divider">
+        <button type="submit" class="btn btn-primary btn-full btn-lg" id="verifyBtn">Verify & Reset Password →</button>
+      </form>
+
+      <p class="form-footer" style="margin-top:1rem">
+        <a href="/lost-knowledge/forgot_password.html">← Try a different method</a>
+      </p>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer" style="padding:1.5rem 0">
+  <div class="container">
+    <div class="footer-bottom">
+      <span>&copy; <span id="yr"></span> Lost Knowledge</span>
+      <span><a href="/lost-knowledge/about.php" style="color:var(--text-on-dark-faint)">About</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="/lost-knowledge/assets/js/script.js"></script>
+<script src="/lost-knowledge/assets/js/features.js"></script>
+<script>
+  document.getElementById('yr').textContent = new Date().getFullYear();
+
+  // ── Read token from URL ──────────────────────────────
+  const params = new URLSearchParams(location.search);
+  const token  = params.get('token') || '';
+  document.getElementById('tokenInput').value = token;
+
+  // ── Flash messages ───────────────────────────────────
+  const err = params.get('error');
+  if (err) {
+    const box = document.getElementById('flashMsg');
+    box.textContent = decodeURIComponent(err);
+    box.style.display = 'flex';
+  }
+
+  // ── Fetch OTP for dev mode ───────────────────────────
+  fetch('/lost-knowledge/api/get_otp_debug.php')
+    .then(r => r.json())
+    .then(data => {
+      if (data.otp) {
+        document.getElementById('otpDebugBox').style.display = 'block';
+        document.getElementById('otpDebugCode').textContent = data.otp;
+      }
+    })
+    .catch(() => {});
+
+  // ── OTP Input Logic ──────────────────────────────────
+  const inputs = document.querySelectorAll('.otp-inputs input');
+  const hidden = document.getElementById('otpHidden');
+
+  function updateHidden() {
+    hidden.value = Array.from(inputs).map(i => i.value).join('');
+  }
+
+  inputs.forEach((inp, idx) => {
+    inp.addEventListener('input', (e) => {
+      // Only allow digits
+      inp.value = inp.value.replace(/[^0-9]/g, '');
+      if (inp.value && idx < inputs.length - 1) {
+        inputs[idx + 1].focus();
+      }
+      updateHidden();
+    });
+
+    inp.addEventListener('keydown', (e) => {
+      if (e.key === 'Backspace' && !inp.value && idx > 0) {
+        inputs[idx - 1].focus();
+        inputs[idx - 1].value = '';
+        updateHidden();
+      }
+    });
+
+    // Handle paste
+    inp.addEventListener('paste', (e) => {
+      e.preventDefault();
+      const text = (e.clipboardData || window.clipboardData).getData('text').replace(/[^0-9]/g, '');
+      for (let i = 0; i < Math.min(text.length, inputs.length); i++) {
+        inputs[i].value = text[i];
+      }
+      if (text.length >= inputs.length) inputs[inputs.length - 1].focus();
+      else if (text.length > 0) inputs[Math.min(text.length, inputs.length - 1)].focus();
+      updateHidden();
+    });
+  });
+
+  // Auto-focus first input
+  inputs[0].focus();
+
+  // ── Countdown Timer ──────────────────────────────────
+  let secondsLeft = 600; // 10 minutes
+  const countdownEl = document.getElementById('countdown');
+  const resendBtn   = document.getElementById('resendBtn');
+
+  const timer = setInterval(() => {
+    secondsLeft--;
+    const m = Math.floor(secondsLeft / 60);
+    const s = secondsLeft % 60;
+    countdownEl.textContent = `${m}:${String(s).padStart(2, '0')}`;
+
+    if (secondsLeft <= 0) {
+      clearInterval(timer);
+      countdownEl.textContent = 'Expired';
+      countdownEl.style.color = '#e88';
+      resendBtn.disabled = false;
+    }
+  }, 1000);
+
+  // Enable resend after 30 seconds
+  setTimeout(() => { resendBtn.disabled = false; }, 30000);
+
+  // ── Resend OTP ──────────────────────────────────────
+  resendBtn.addEventListener('click', () => {
+    window.location.href = '/lost-knowledge/forgot_password.html?tab=phone';
+  });
+
+  // ── Form Validation ──────────────────────────────────
+  document.getElementById('otpForm').addEventListener('submit', function(e) {
+    const otp = hidden.value;
+    const span = document.getElementById('otpError');
+    if (otp.length !== 6) {
+      e.preventDefault();
+      span.textContent = 'Please enter all 6 digits.';
+      span.style.color = 'var(--red,#e44)';
+    } else {
+      span.textContent = '';
+    }
+  });
+</script>
+</body>
+</html>

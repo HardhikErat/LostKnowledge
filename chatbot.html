@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Got questions about Lost Knowledge? Our AI assistant can help.">
+  <title>Help Bot — Lost Knowledge</title>
+  <link rel="stylesheet" href="/lost-knowledge/assets/css/style.css">
+  <link rel="stylesheet" href="/lost-knowledge/assets/css/features.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container nav-inner">
+    <a href="/lost-knowledge/index.html" class="site-logo">
+      <img src="/lost-knowledge/assets/logo.png" alt="Lost Knowledge" class="nav-logo-img">
+      <div class="logo-text">
+        <span class="logo-mark">Lost Knowledge</span>
+        <span class="logo-sub">Archive of Vanishing Wisdom</span>
+      </div>
+    </a>
+    <button class="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="nav-links" aria-label="Main navigation">
+      <a href="/lost-knowledge/index.html"    class="nav-link">Archive</a>
+      <a href="/lost-knowledge/about.php"    class="nav-link">About</a>
+      <a href="/lost-knowledge/register.html" class="nav-link">Register</a>
+      <a href="/lost-knowledge/login.html"    class="nav-link">Sign In</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page-header">
+  <div class="container">
+    <div class="section-label">Help & Support</div>
+    <h1>Knowledge Keeper Bot</h1>
+    <p>Select a question below to get instant answers about the archive.</p>
+  </div>
+</div>
+
+<main>
+  <div class="chatbot-container">
+    <div class="chatbot-wrap">
+
+      <!-- Chat messages area -->
+      <div class="chat-messages" id="chatMessages">
+        <!-- Bot welcome message -->
+        <div class="chat-bubble bot">
+          <div class="chat-avatar">🤖</div>
+          <div class="chat-content">
+            <div class="chat-name">Knowledge Keeper Bot</div>
+            <div class="chat-text">
+              Hello! 👋 I'm the Knowledge Keeper Bot. I can answer your questions about Lost Knowledge.
+              <br><br>
+              Select a question from the list below to get started!
+            </div>
+            <div class="chat-time" id="welcomeTime"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Question chips area -->
+      <div class="chat-input-area" id="chatInputArea">
+        <div class="chat-chips-label">
+          <span class="chat-chips-icon">💬</span>
+          Choose a question:
+        </div>
+        <div class="chat-chips" id="chatChips">
+          <!-- Populated by JS -->
+        </div>
+        <div class="chat-contact-note">
+          <span class="chat-contact-icon">✉️</span>
+          Have a different question? Contact us at
+          <a href="mailto:abc@gmail.com">abc@gmail.com</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer" style="padding:1.5rem 0">
+  <div class="container">
+    <div class="footer-bottom">
+      <span>&copy; <span id="yr"></span> Lost Knowledge</span>
+      <span><a href="/lost-knowledge/about.php" style="color:var(--ink-300)">About</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="/lost-knowledge/assets/js/script.js"></script>
+<script src="/lost-knowledge/assets/js/features.js"></script>
+<script>
+document.getElementById('yr').textContent = new Date().getFullYear();
+
+// ── Pre-coded FAQ data ──────────────────────────────────
+const FAQ = [
+  {
+    q: "How do I submit a knowledge entry?",
+    a: "Navigate to your <strong>Dashboard</strong> and click <strong>\"+ Submit Entry\"</strong>. Fill in the title, choose a category, write a summary and the full description of the knowledge you want to preserve. Your entry will be reviewed by our admin team before it goes live in the archive."
+  },
+  {
+    q: "How long does approval take?",
+    a: "Entries are reviewed by our admin team typically within <strong>24–48 hours</strong>. You'll see the status update on your Dashboard — it will change from <em>Pending</em> to either <em>Approved</em> or <em>Rejected</em>. Approved entries immediately appear in the public archive."
+  },
+  {
+    q: "Can I edit my entry after submission?",
+    a: "Yes! Go to your <strong>Dashboard → My Entries</strong> and click the <strong>\"Edit\"</strong> button on any entry you've submitted. Note that if your entry was already approved, editing it may send it back to pending review."
+  },
+  {
+    q: "How does the voting system work?",
+    a: "Registered users can <strong>upvote ▲</strong> or <strong>downvote ▼</strong> any approved entry. Each user gets one vote per entry. Votes help surface the most valuable knowledge in the archive. You can change your vote at any time by clicking the opposite button."
+  },
+  {
+    q: "What categories are available?",
+    a: "We have <strong>8 categories</strong> covering different domains of vanishing knowledge:<br><br>🏺 Ancient Crafts &nbsp;•&nbsp; 📯 Oral Traditions &nbsp;•&nbsp; 🌿 Herbal Medicine &nbsp;•&nbsp; 🌾 Agricultural Lore<br>🏛️ Architecture &nbsp;•&nbsp; ⚓ Navigation &nbsp;•&nbsp; 𓂀 Language & Scripts &nbsp;•&nbsp; 🔥 Ritual & Ceremony"
+  },
+  {
+    q: "How do I delete my account?",
+    a: "Account deletion requires admin assistance for data safety reasons. Please contact our team at <a href='mailto:abc@gmail.com' style='color:var(--amber-light);font-weight:600;'>abc@gmail.com</a> with the subject line <em>\"Account Deletion Request\"</em> and we'll process it within 48 hours."
+  },
+  {
+    q: "Is my data safe and secure?",
+    a: "Absolutely! We take security seriously:<br><br>🔒 Passwords are hashed with <strong>bcrypt</strong> (cost factor 12)<br>🛡️ Sessions are secured with <strong>httpOnly</strong> cookies<br>🔑 All form submissions use server-side validation<br>📜 Read our <a href='/lost-knowledge/privacy.html' style='color:var(--amber-light);'>Privacy Policy</a> for full details."
+  },
+  {
+    q: "Can I bookmark/save entries?",
+    a: "Yes! When viewing any entry's detail page, click the <strong>\"☆ Save Entry\"</strong> button to bookmark it. All your saved entries are accessible from your <strong>Dashboard → Saved Entries</strong> tab. You can remove bookmarks at any time."
+  },
+  {
+    q: "How do I reset my password?",
+    a: "Go to the <a href='/lost-knowledge/forgot_password.html' style='color:var(--amber-light);font-weight:600;'>Forgot Password</a> page. Enter your registered email address and we'll send you a reset link. The link expires in 1 hour. Click it to set a new password."
+  },
+  {
+    q: "Can I sign in with Google?",
+    a: "Yes! On the <a href='/lost-knowledge/login.html' style='color:var(--amber-light);font-weight:600;'>Sign In</a> page, click the <strong>\"Sign in with Google\"</strong> button. If you're a new user, an account will be created automatically using your Google profile. If you already have an account with the same email, it will be linked."
+  }
+];
+
+// ── Chatbot Logic ────────────────────────────────────────
+const chatMessages = document.getElementById('chatMessages');
+const chatChips    = document.getElementById('chatChips');
+
+// Set welcome time
+document.getElementById('welcomeTime').textContent = formatTime(new Date());
+
+// Render question chips
+function renderChips() {
+  chatChips.innerHTML = FAQ.map((item, i) => `
+    <button class="chat-chip" onclick="askQuestion(${i})" data-index="${i}">
+      <span class="chip-icon">❓</span>
+      <span class="chip-text">${item.q}</span>
+    </button>
+  `).join('');
+}
+
+function askQuestion(index) {
+  const faq = FAQ[index];
+  const now = new Date();
+
+  // Disable clicked chip
+  const chips = chatChips.querySelectorAll('.chat-chip');
+  chips[index].classList.add('used');
+  chips[index].disabled = true;
+
+  // Add user question bubble
+  const userBubble = document.createElement('div');
+  userBubble.className = 'chat-bubble user anim-chat';
+  userBubble.innerHTML = `
+    <div class="chat-content">
+      <div class="chat-name">You</div>
+      <div class="chat-text">${escapeHtml(faq.q)}</div>
+      <div class="chat-time">${formatTime(now)}</div>
+    </div>
+    <div class="chat-avatar">👤</div>
+  `;
+  chatMessages.appendChild(userBubble);
+  scrollChat();
+
+  // Show typing indicator
+  const typing = document.createElement('div');
+  typing.className = 'chat-bubble bot typing-bubble';
+  typing.innerHTML = `
+    <div class="chat-avatar">🤖</div>
+    <div class="chat-content">
+      <div class="typing-indicator">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  `;
+  chatMessages.appendChild(typing);
+  scrollChat();
+
+  // After delay, replace typing with answer
+  setTimeout(() => {
+    typing.remove();
+    const botBubble = document.createElement('div');
+    botBubble.className = 'chat-bubble bot anim-chat';
+    botBubble.innerHTML = `
+      <div class="chat-avatar">🤖</div>
+      <div class="chat-content">
+        <div class="chat-name">Knowledge Keeper Bot</div>
+        <div class="chat-text">${faq.a}</div>
+        <div class="chat-time">${formatTime(new Date())}</div>
+      </div>
+    `;
+    chatMessages.appendChild(botBubble);
+    scrollChat();
+  }, 1200 + Math.random() * 800);
+}
+
+function scrollChat() {
+  requestAnimationFrame(() => {
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  });
+}
+
+function formatTime(d) {
+  return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+// Init
+renderChips();
+</script>
+</body>
+</html>

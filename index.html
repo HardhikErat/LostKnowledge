@@ -4,15 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Lost Knowledge — a community archive preserving forgotten traditions, dying crafts, and ancient wisdom before they vanish forever.">
-  <!-- Open Graph / Social Cards -->
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="Lost Knowledge — Archive of Vanishing Wisdom">
-  <meta property="og:description" content="A community archive preserving forgotten traditions, dying crafts, and ancient wisdom.">
-  <meta property="og:url" content="http://localhost/lost-knowledge/">
-  <meta name="twitter:card" content="summary_large_image">
   <title>Lost Knowledge — Archive of Vanishing Wisdom</title>
-  <link rel="stylesheet" href="/lost-knowledge/assets/css/style.css">
-  <link rel="stylesheet" href="/lost-knowledge/assets/css/features.css">
+  <link rel="stylesheet" href="/assets/css/style.css">
 </head>
 <body>
 
@@ -20,7 +13,7 @@
 <header class="site-header">
   <div class="container nav-inner">
     <a href="/lost-knowledge/index.html" class="site-logo">
-      <img src="/lost-knowledge/assets/logo.png" alt="Lost Knowledge" class="nav-logo-img">
+      <div class="logo-icon">📖</div>
       <div class="logo-text">
         <span class="logo-mark">Lost Knowledge</span>
         <span class="logo-sub">Archive of Vanishing Wisdom</span>
@@ -33,8 +26,7 @@
 
     <nav class="nav-links" aria-label="Main navigation">
       <a href="/lost-knowledge/index.html"    class="nav-link active">Archive</a>
-      <a href="/lost-knowledge/explore_map.html" class="nav-link">🗺️ Map</a>
-      <a href="/lost-knowledge/about.php"    class="nav-link">About</a>
+      <a href="/lost-knowledge/about.html"    class="nav-link">About</a>
       <div class="nav-sep"></div>
       <a href="/lost-knowledge/register.html" class="nav-link">Register</a>
       <a href="/lost-knowledge/login.html"    class="nav-link">Sign In</a>
@@ -286,9 +278,9 @@
       <div class="footer-col">
         <h4>Community</h4>
         <ul>
-          <li><a href="/lost-knowledge/about.php">About Us</a></li>
+          <li><a href="/lost-knowledge/about.html">About Us</a></li>
           <li><a href="/lost-knowledge/register.html">Become a Keeper</a></li>
-          <li><a href="/lost-knowledge/guidelines.html">Guidelines</a></li>
+          <li><a href="/lost-knowledge/about.html">Guidelines</a></li>
         </ul>
       </div>
 
@@ -296,9 +288,9 @@
       <div class="footer-col">
         <h4>Support</h4>
         <ul>
-          <li><a href="/lost-knowledge/help.html">Help Center</a></li>
-          <li><a href="/lost-knowledge/privacy.html">Privacy Policy</a></li>
-          <li><a href="/lost-knowledge/terms.html">Terms of Service</a></li>
+          <li><a href="/lost-knowledge/about.html">Help Center</a></li>
+          <li><a href="/lost-knowledge/about.html">Privacy Policy</a></li>
+          <li><a href="/lost-knowledge/about.html">Terms of Service</a></li>
           <li><a href="/lost-knowledge/admin/admin_dashboard.php" class="admin-link">Admin Dashboard</a></li>
         </ul>
       </div>
@@ -313,7 +305,6 @@
 </footer>
 
 <script src="/lost-knowledge/assets/js/script.js"></script>
-<script src="/lost-knowledge/assets/js/features.js"></script>
 <script>
   // Set category from URL param
   window.addEventListener('load', function () {
@@ -321,11 +312,6 @@
     if (urlCat) {
       const sel = document.getElementById('catSelect');
       if (sel) { sel.value = urlCat; sel.dispatchEvent(new Event('change')); }
-    }
-    const urlTag = new URLSearchParams(location.search).get('tag');
-    if (urlTag) {
-      document.getElementById('archiveTitle')?.insertAdjacentHTML('afterend',
-        `<div class="tag-list" style="margin-bottom:1rem"><span class="tag-pill">#${urlTag} <a href="/lost-knowledge/index.html" style="margin-left:6px;color:var(--amber-light)">✕</a></span></div>`);
     }
   });
 </script>
