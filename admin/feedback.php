@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['flash_error'] = 'Action failed. Please try again.';
         }
     }
-    header('Location: /lost-knowledge/admin/feedback.php');
+    header('Location: /admin/feedback.php');
     exit;
 }
 
@@ -122,7 +122,7 @@ $subjectColors = [
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Feedback — Admin — Lost Knowledge</title>
-  <link rel="stylesheet" href="/lost-knowledge/assets/css/style.css">
+  <link rel="stylesheet" href="/assets/css/style.css">
   <style>
     .fb-card {
       background: var(--bg-panel);
@@ -169,8 +169,8 @@ $subjectColors = [
 
 <header class="site-header">
   <div class="container nav-inner">
-    <a href="/lost-knowledge/index.html" class="site-logo">
-      <img src="/lost-knowledge/assets/logo.png" alt="Lost Knowledge" class="nav-logo-img">
+    <a href="/index.html" class="site-logo">
+      <img src="/assets/logo.png" alt="Lost Knowledge" class="nav-logo-img">
       <div class="logo-text">
         <span class="logo-mark">Lost Knowledge</span>
         <span class="logo-sub">Archive of Vanishing Wisdom</span>
@@ -178,11 +178,11 @@ $subjectColors = [
     </a>
     <button class="nav-toggle" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
     <nav class="nav-links">
-      <a href="/lost-knowledge/index.html"                class="nav-link">Archive</a>
-      <a href="/lost-knowledge/dashboard.php"             class="nav-link">Dashboard</a>
-      <a href="/lost-knowledge/admin/admin_dashboard.php" class="nav-link">Admin Panel</a>
-      <a href="/lost-knowledge/admin/feedback.php"        class="nav-link active">Feedback</a>
-      <a href="/lost-knowledge/logout.php"                class="nav-link">Sign Out</a>
+      <a href="/index.html"                class="nav-link">Archive</a>
+      <a href="/dashboard.php"             class="nav-link">Dashboard</a>
+      <a href="/admin/admin_dashboard.php" class="nav-link">Admin Panel</a>
+      <a href="/admin/feedback.php"        class="nav-link active">Feedback</a>
+      <a href="/logout.php"                class="nav-link">Sign Out</a>
     </nav>
   </div>
 </header>
@@ -397,11 +397,11 @@ $subjectColors = [
     <div class="footer-bottom">
       <span>© <?= date('Y') ?> Lost Knowledge — Admin</span>
       <span class="footer-bottom-diamond">✦</span>
-      <span><a href="/lost-knowledge/admin/admin_dashboard.php" style="color:var(--amber-light)">← Back to Admin Panel</a></span>
+      <span><a href="/admin/admin_dashboard.php" style="color:var(--amber-light)">← Back to Admin Panel</a></span>
     </div>
   </div>
 </footer>
 
-<script src="/lost-knowledge/assets/js/script.js"></script>
+<script src="/assets/js/script.js"></script>
 </body>
 </html>

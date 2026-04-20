@@ -2,7 +2,7 @@
 // ============================================================
 // profile.php — Public user profile page
 // Shows user info, karma level, and their approved entries.
-// URL: /lost-knowledge/profile.php?username=...
+// URL: /profile.php?username=...
 // ============================================================
 
 require_once __DIR__ . '/config/auth.php';
@@ -11,7 +11,7 @@ require_once __DIR__ . '/config/notify.php';
 
 $profileUsername = trim($_GET['username'] ?? '');
 if (empty($profileUsername)) {
-    header('Location: /lost-knowledge/index.html');
+    header('Location: /index.html');
     exit;
 }
 
@@ -88,15 +88,15 @@ $isOwnProfile = is_logged_in() && current_username() === $profileUsername;
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="<?= $notFound ? 'User not found' : htmlspecialchars($profileUsername) . ' — Knowledge Keeper profile on Lost Knowledge' ?>">
   <title><?= $notFound ? 'User Not Found' : htmlspecialchars($profileUsername) ?> — Lost Knowledge</title>
-  <link rel="stylesheet" href="/lost-knowledge/assets/css/style.css">
-  <link rel="stylesheet" href="/lost-knowledge/assets/css/features.css">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="stylesheet" href="/assets/css/features.css">
 </head>
 <body>
 
 <header class="site-header">
   <div class="container nav-inner">
-    <a href="/lost-knowledge/index.html" class="site-logo">
-      <img src="/lost-knowledge/assets/logo.png" alt="Lost Knowledge" class="nav-logo-img">
+    <a href="/index.html" class="site-logo">
+      <img src="/assets/logo.png" alt="Lost Knowledge" class="nav-logo-img">
       <div class="logo-text">
         <span class="logo-mark">Lost Knowledge</span>
         <span class="logo-sub">Archive of Vanishing Wisdom</span>
@@ -104,17 +104,17 @@ $isOwnProfile = is_logged_in() && current_username() === $profileUsername;
     </a>
     <button class="nav-toggle" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
     <nav class="nav-links" aria-label="Main navigation">
-      <a href="/lost-knowledge/index.html" class="nav-link">Archive</a>
-      <a href="/lost-knowledge/about.php" class="nav-link">About</a>
+      <a href="/index.html" class="nav-link">Archive</a>
+      <a href="/about.php" class="nav-link">About</a>
       <div class="nav-sep"></div>
       <?php if (is_logged_in()): ?>
-        <a href="/lost-knowledge/dashboard.php" class="nav-link">Dashboard</a>
-        <a href="/lost-knowledge/logout.php" class="nav-link">Sign Out</a>
+        <a href="/dashboard.php" class="nav-link">Dashboard</a>
+        <a href="/logout.php" class="nav-link">Sign Out</a>
       <?php else: ?>
-        <a href="/lost-knowledge/register.html" class="nav-link">Register</a>
-        <a href="/lost-knowledge/login.html" class="nav-link">Sign In</a>
+        <a href="/register.html" class="nav-link">Register</a>
+        <a href="/login.html" class="nav-link">Sign In</a>
       <?php endif; ?>
-      <a href="/lost-knowledge/submit.php" class="nav-link nav-cta">✦ Submit Entry</a>
+      <a href="/submit.php" class="nav-link nav-cta">✦ Submit Entry</a>
     </nav>
   </div>
 </header>
@@ -134,7 +134,7 @@ $isOwnProfile = is_logged_in() && current_username() === $profileUsername;
     <div style="font-size:4rem;margin-bottom:1rem">🔍</div>
     <h3 style="color:var(--text-on-dark);margin-bottom:.5rem">No keeper found</h3>
     <p style="color:var(--text-on-dark-muted)">The username "<strong><?= htmlspecialchars($profileUsername) ?></strong>" doesn't match any account.</p>
-    <a href="/lost-knowledge/index.html" class="btn btn-amber" style="margin-top:1.5rem">← Back to Archive</a>
+    <a href="/index.html" class="btn btn-amber" style="margin-top:1.5rem">← Back to Archive</a>
   </div>
 </main>
 
@@ -181,7 +181,7 @@ $isOwnProfile = is_logged_in() && current_username() === $profileUsername;
         <?php endif; ?>
 
         <?php if ($isOwnProfile): ?>
-          <a href="/lost-knowledge/edit_profile.php" class="btn btn-amber" style="font-size:.82rem;padding:6px 18px">✏️ Edit Profile</a>
+          <a href="/edit_profile.php" class="btn btn-amber" style="font-size:.82rem;padding:6px 18px">✏️ Edit Profile</a>
         <?php endif; ?>
       </div>
     </div>
@@ -224,7 +224,7 @@ $isOwnProfile = is_logged_in() && current_username() === $profileUsername;
     <?php else: ?>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.25rem">
         <?php foreach ($entries as $entry): ?>
-        <article class="entry-card" onclick="window.location.href='/lost-knowledge/entry.php?id=<?= $entry['id'] ?>'" role="button" tabindex="0" style="cursor:pointer">
+        <article class="entry-card" onclick="window.location.href='/entry.php?id=<?= $entry['id'] ?>'" role="button" tabindex="0" style="cursor:pointer">
           <?php if ($entry['image_path']): ?>
             <img src="<?= htmlspecialchars($entry['image_path']) ?>" alt="" class="ec-image">
           <?php endif; ?>
@@ -261,7 +261,7 @@ $isOwnProfile = is_logged_in() && current_username() === $profileUsername;
   </div>
 </footer>
 
-<script src="/lost-knowledge/assets/js/script.js"></script>
-<script src="/lost-knowledge/assets/js/features.js"></script>
+<script src="/assets/js/script.js"></script>
+<script src="/assets/js/features.js"></script>
 </body>
 </html>

@@ -3,7 +3,7 @@ require_once __DIR__ . '/config/auth.php';
 require_once __DIR__ . '/config/db.php';
 
 $entryId = (int)($_GET['id'] ?? 0);
-if ($entryId <= 0) { header('Location: /lost-knowledge/index.html'); exit; }
+if ($entryId <= 0) { header('Location: /index.html'); exit; }
 
 try {
     $pdo = get_pdo();
@@ -12,12 +12,12 @@ try {
     $stmt = $pdo->prepare('SELECT ke.title, ke.user_id, u.username FROM knowledge_entries ke LEFT JOIN users u ON ke.user_id = u.id WHERE ke.id = ?');
     $stmt->execute([$entryId]);
     $entry = $stmt->fetch();
-    if (!$entry) { header('Location: /lost-knowledge/index.html'); exit; }
+    if (!$entry) { header('Location: /index.html'); exit; }
 
     // Only owner or admin can view revisions
     if (!is_logged_in() || (current_user_id() !== (int)$entry['user_id'] && !is_admin())) {
         $_SESSION['flash_error'] = 'You do not have permission to view revision history.';
-        header('Location: /lost-knowledge/entry.php?id=' . $entryId);
+        header('Location: /entry.php?id=' . $entryId);
         exit;
     }
 
@@ -42,15 +42,15 @@ try {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Revision History — <?= htmlspecialchars($entry['title']) ?></title>
-  <link rel="stylesheet" href="/lost-knowledge/assets/css/style.css">
-  <link rel="stylesheet" href="/lost-knowledge/assets/css/features.css">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="stylesheet" href="/assets/css/features.css">
 </head>
 <body>
 
 <header class="site-header">
   <div class="container nav-inner">
-    <a href="/lost-knowledge/index.html" class="site-logo">
-      <img src="/lost-knowledge/assets/logo.png" alt="Lost Knowledge" class="nav-logo-img">
+    <a href="/index.html" class="site-logo">
+      <img src="/assets/logo.png" alt="Lost Knowledge" class="nav-logo-img">
       <div class="logo-text">
         <span class="logo-mark">Lost Knowledge</span>
         <span class="logo-sub">Archive of Vanishing Wisdom</span>
@@ -58,9 +58,9 @@ try {
     </a>
     <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
     <nav class="nav-links">
-      <a href="/lost-knowledge/entry.php?id=<?= $entryId ?>" class="nav-link">← Back to Entry</a>
-      <a href="/lost-knowledge/dashboard.php" class="nav-link">Dashboard</a>
-      <a href="/lost-knowledge/logout.php" class="nav-link">Sign Out</a>
+      <a href="/entry.php?id=<?= $entryId ?>" class="nav-link">← Back to Entry</a>
+      <a href="/dashboard.php" class="nav-link">Dashboard</a>
+      <a href="/logout.php" class="nav-link">Sign Out</a>
     </nav>
   </div>
 </header>
@@ -115,7 +115,7 @@ try {
     <?php endif; ?>
 
     <div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border-dark)">
-      <a href="/lost-knowledge/entry.php?id=<?= $entryId ?>" class="btn btn-ghost" style="padding-left:0">← Back to entry</a>
+      <a href="/entry.php?id=<?= $entryId ?>" class="btn btn-ghost" style="padding-left:0">← Back to entry</a>
     </div>
   </div>
 </main>
@@ -124,7 +124,7 @@ try {
   <div class="container"><div class="footer-bottom"><span>&copy; <?= date('Y') ?> Lost Knowledge</span></div></div>
 </footer>
 
-<script src="/lost-knowledge/assets/js/script.js"></script>
-<script src="/lost-knowledge/assets/js/features.js"></script>
+<script src="/assets/js/script.js"></script>
+<script src="/assets/js/features.js"></script>
 </body>
 </html>

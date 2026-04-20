@@ -5,15 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Create your Lost Knowledge account and become a Keeper of forgotten wisdom.">
   <title>Register — Lost Knowledge</title>
-  <link rel="stylesheet" href="/lost-knowledge/assets/css/style.css">
-  <link rel="stylesheet" href="/lost-knowledge/assets/css/features.css">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="stylesheet" href="/assets/css/features.css">
 </head>
 <body>
 
 <header class="site-header">
   <div class="container nav-inner">
-    <a href="/lost-knowledge/index.html" class="site-logo">
-      <img src="/lost-knowledge/assets/logo.png" alt="Lost Knowledge" class="nav-logo-img">
+    <a href="/index.html" class="site-logo">
+      <img src="/assets/logo.png" alt="Lost Knowledge" class="nav-logo-img">
       <div class="logo-text">
         <span class="logo-mark">Lost Knowledge</span>
         <span class="logo-sub">Archive of Vanishing Wisdom</span>
@@ -23,10 +23,10 @@
       <span></span><span></span><span></span>
     </button>
     <nav class="nav-links" aria-label="Main navigation">
-      <a href="/lost-knowledge/index.html"    class="nav-link">Archive</a>
-      <a href="/lost-knowledge/about.php"    class="nav-link">About</a>
-      <a href="/lost-knowledge/register.html" class="nav-link active">Register</a>
-      <a href="/lost-knowledge/login.html"    class="nav-link">Sign In</a>
+      <a href="/index.html"    class="nav-link">Archive</a>
+      <a href="/about.php"    class="nav-link">About</a>
+      <a href="/register.html" class="nav-link active">Register</a>
+      <a href="/login.html"    class="nav-link">Sign In</a>
     </nav>
   </div>
 </header>
@@ -48,11 +48,11 @@
 
       <div class="form-card-header">
         <h2>Sign up</h2>
-        <p>Already have an account? <a href="/lost-knowledge/login.html">Sign in here</a></p>
+        <p>Already have an account? <a href="/login.html">Sign in here</a></p>
       </div>
 
       <!-- Google Sign-Up Button -->
-      <a href="/lost-knowledge/config/google_redirect.php" class="btn-google" id="googleRegisterBtn">
+      <a href="/config/google_redirect.php" class="btn-google" id="googleRegisterBtn">
         <svg class="google-icon" viewBox="0 0 24 24" width="20" height="20">
           <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
           <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -72,7 +72,7 @@
         All validation and DB logic lives in register_process.php.
         The form POSTs directly to the PHP handler.
       -->
-      <form id="registerForm" method="POST" action="/lost-knowledge/register_process.php" novalidate>
+      <form id="registerForm" method="POST" action="/register_process.php" novalidate>
 
         <div class="form-group">
           <label for="username">Username <span class="req">*</span></label>
@@ -134,13 +134,13 @@
   <div class="container">
     <div class="footer-bottom">
       <span>&copy; <span id="yr"></span> Lost Knowledge</span>
-      <span><a href="/lost-knowledge/about.php" style="color:var(--ink-300)">About</a></span>
+      <span><a href="/about.php" style="color:var(--ink-300)">About</a></span>
     </div>
   </div>
 </footer>
 
-<script src="/lost-knowledge/assets/js/script.js"></script>
-<script src="/lost-knowledge/assets/js/features.js"></script>
+<script src="/assets/js/script.js"></script>
+<script src="/assets/js/features.js"></script>
 <script>
   document.getElementById('yr').textContent = new Date().getFullYear();
 

@@ -59,15 +59,15 @@ $err = $_SESSION['flash_error']   ?? ''; unset($_SESSION['flash_error']);
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard — Lost Knowledge</title>
-  <link rel="stylesheet" href="/lost-knowledge/assets/css/style.css">
-  <link rel="stylesheet" href="/lost-knowledge/assets/css/features.css">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="stylesheet" href="/assets/css/features.css">
 </head>
 <body>
 
 <header class="site-header">
   <div class="container nav-inner">
-    <a href="/lost-knowledge/index.html" class="site-logo">
-      <img src="/lost-knowledge/assets/logo.png" alt="Lost Knowledge" class="nav-logo-img">
+    <a href="/index.html" class="site-logo">
+      <img src="/assets/logo.png" alt="Lost Knowledge" class="nav-logo-img">
       <div class="logo-text">
         <span class="logo-mark">Lost Knowledge</span>
         <span class="logo-sub">Archive of Vanishing Wisdom</span>
@@ -75,13 +75,13 @@ $err = $_SESSION['flash_error']   ?? ''; unset($_SESSION['flash_error']);
     </a>
     <button class="nav-toggle" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
     <nav class="nav-links">
-      <a href="/lost-knowledge/index.html"    class="nav-link">Archive</a>
-      <a href="/lost-knowledge/dashboard.php" class="nav-link active">Dashboard</a>
+      <a href="/index.html"    class="nav-link">Archive</a>
+      <a href="/dashboard.php" class="nav-link active">Dashboard</a>
       <?php if ($role==='admin'): ?>
-      <a href="/lost-knowledge/admin/admin_dashboard.php" class="nav-link">Admin</a>
+      <a href="/admin/admin_dashboard.php" class="nav-link">Admin</a>
       <?php endif; ?>
-      <a href="/lost-knowledge/submit.php"    class="nav-link nav-cta">+ Submit</a>
-      <a href="/lost-knowledge/logout.php"    class="nav-link">Sign Out</a>
+      <a href="/submit.php"    class="nav-link nav-cta">+ Submit</a>
+      <a href="/logout.php"    class="nav-link">Sign Out</a>
     </nav>
   </div>
 </header>
@@ -107,15 +107,15 @@ $err = $_SESSION['flash_error']   ?? ''; unset($_SESSION['flash_error']);
           </div>
         </div>
         <ul class="dash-nav">
-          <li><a class="active" href="/lost-knowledge/dashboard.php">📜 &nbsp;My Entries</a></li>
-          <li><a href="/lost-knowledge/dashboard.php?tab=bookmarks">🔖 &nbsp;Saved Entries</a></li>
-          <li><a href="/lost-knowledge/edit_profile.php">✏️ &nbsp;Edit Profile</a></li>
-          <li><a href="/lost-knowledge/profile.php?username=<?= urlencode($username) ?>">👤 &nbsp;My Profile</a></li>
-          <li><a href="/lost-knowledge/submit.php">✦ &nbsp;New Entry</a></li>
+          <li><a class="active" href="/dashboard.php">📜 &nbsp;My Entries</a></li>
+          <li><a href="/dashboard.php?tab=bookmarks">🔖 &nbsp;Saved Entries</a></li>
+          <li><a href="/edit_profile.php">✏️ &nbsp;Edit Profile</a></li>
+          <li><a href="/profile.php?username=<?= urlencode($username) ?>">👤 &nbsp;My Profile</a></li>
+          <li><a href="/submit.php">✦ &nbsp;New Entry</a></li>
           <?php if ($role==='admin'): ?>
-          <li><a href="/lost-knowledge/admin/admin_dashboard.php">⚙ &nbsp;Admin Panel</a></li>
+          <li><a href="/admin/admin_dashboard.php">⚙ &nbsp;Admin Panel</a></li>
           <?php endif; ?>
-          <li><a href="/lost-knowledge/logout.php">↩ &nbsp;Sign Out</a></li>
+          <li><a href="/logout.php">↩ &nbsp;Sign Out</a></li>
         </ul>
 
         <?php
@@ -146,7 +146,7 @@ $err = $_SESSION['flash_error']   ?? ''; unset($_SESSION['flash_error']);
           <h2 style="border:none;padding:0;margin:0">
             <?php echo isset($_GET['tab']) && $_GET['tab']==='bookmarks' ? 'Saved Entries' : 'My Contributions'; ?>
           </h2>
-          <a href="/lost-knowledge/submit.php" class="btn btn-primary btn-sm">+ Add Entry</a>
+          <a href="/submit.php" class="btn btn-primary btn-sm">+ Add Entry</a>
         </div>
 
         <?php if (isset($_GET['tab']) && $_GET['tab'] === 'bookmarks'): ?>
@@ -156,7 +156,7 @@ $err = $_SESSION['flash_error']   ?? ''; unset($_SESSION['flash_error']);
             <div class="empty-icon">🔖</div>
             <h3>No saved entries</h3>
             <p>Browse the archive and click <strong>☆ Save Entry</strong> on any entry to bookmark it.</p>
-            <a href="/lost-knowledge/index.html" class="btn btn-outline mt-2">Browse Archive</a>
+            <a href="/index.html" class="btn btn-outline mt-2">Browse Archive</a>
           </div>
         <?php else: ?>
           <div class="data-table-wrap">
@@ -165,12 +165,12 @@ $err = $_SESSION['flash_error']   ?? ''; unset($_SESSION['flash_error']);
               <tbody>
                 <?php foreach ($bookmarks as $b): ?>
                 <tr>
-                  <td><a href="/lost-knowledge/entry.php?id=<?= $b['id'] ?>" style="color:var(--amber-dark);font-weight:500"><?= htmlspecialchars($b['title']) ?></a></td>
+                  <td><a href="/entry.php?id=<?= $b['id'] ?>" style="color:var(--amber-dark);font-weight:500"><?= htmlspecialchars($b['title']) ?></a></td>
                   <td><?= htmlspecialchars($b['cat'] ?? '—') ?></td>
                   <td><span class="ec-status <?= $b['status'] ?>"><?= ucfirst($b['status']) ?></span></td>
                   <td style="font-size:.82rem"><?= date('d M Y', strtotime($b['saved_at'])) ?></td>
                   <td>
-                    <form method="POST" action="/lost-knowledge/bookmark_process.php" style="display:inline">
+                    <form method="POST" action="/bookmark_process.php" style="display:inline">
                       <input type="hidden" name="entry_id" value="<?= $b['id'] ?>">
                       <button type="submit" class="btn btn-ghost btn-sm" style="color:var(--red-accent)"
                               onclick="return confirm('Remove this bookmark?')">✕ Remove</button>
@@ -199,7 +199,7 @@ $err = $_SESSION['flash_error']   ?? ''; unset($_SESSION['flash_error']);
             <div class="empty-icon">📝</div>
             <h3>No entries yet</h3>
             <p>Share the first piece of knowledge you want to preserve.</p>
-            <a href="/lost-knowledge/submit.php" class="btn btn-outline mt-2">Submit your first entry</a>
+            <a href="/submit.php" class="btn btn-outline mt-2">Submit your first entry</a>
           </div>
         <?php else: ?>
           <div class="data-table-wrap">
@@ -214,7 +214,7 @@ $err = $_SESSION['flash_error']   ?? ''; unset($_SESSION['flash_error']);
                 <?php foreach ($entries as $e): ?>
                 <tr>
                   <td style="max-width:220px">
-                    <a href="/lost-knowledge/entry.php?id=<?= $e['id'] ?>" style="color:var(--amber-dark);font-weight:500">
+                    <a href="/entry.php?id=<?= $e['id'] ?>" style="color:var(--amber-dark);font-weight:500">
                       <?= htmlspecialchars($e['title']) ?>
                     </a>
                   </td>
@@ -230,8 +230,8 @@ $err = $_SESSION['flash_error']   ?? ''; unset($_SESSION['flash_error']);
                   <td style="white-space:nowrap;font-size:.82rem"><?= date('d M Y', strtotime($e['created_at'])) ?></td>
                   <td>
                     <div class="table-actions">
-                      <a href="/lost-knowledge/edit_entry.php?id=<?= $e['id'] ?>" class="btn btn-ghost btn-sm">Edit</a>
-                      <a href="/lost-knowledge/delete_entry.php?id=<?= $e['id'] ?>"
+                      <a href="/edit_entry.php?id=<?= $e['id'] ?>" class="btn btn-ghost btn-sm">Edit</a>
+                      <a href="/delete_entry.php?id=<?= $e['id'] ?>"
                          class="btn btn-danger btn-sm"
                          data-confirm="Delete this entry permanently?">Del</a>
                     </div>
@@ -256,7 +256,7 @@ $err = $_SESSION['flash_error']   ?? ''; unset($_SESSION['flash_error']);
   </div>
 </footer>
 
-<script src="/lost-knowledge/assets/js/script.js"></script>
-<script src="/lost-knowledge/assets/js/features.js"></script>
+<script src="/assets/js/script.js"></script>
+<script src="/assets/js/features.js"></script>
 </body>
 </html>

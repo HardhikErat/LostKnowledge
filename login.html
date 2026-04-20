@@ -5,15 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Sign in to your Lost Knowledge account.">
   <title>Sign In — Lost Knowledge</title>
-  <link rel="stylesheet" href="/lost-knowledge/assets/css/style.css">
-  <link rel="stylesheet" href="/lost-knowledge/assets/css/features.css">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="stylesheet" href="/assets/css/features.css">
 </head>
 <body>
 
 <header class="site-header">
   <div class="container nav-inner">
-    <a href="/lost-knowledge/index.html" class="site-logo">
-      <img src="/lost-knowledge/assets/logo.png" alt="Lost Knowledge" class="nav-logo-img">
+    <a href="/index.html" class="site-logo">
+      <img src="/assets/logo.png" alt="Lost Knowledge" class="nav-logo-img">
       <div class="logo-text">
         <span class="logo-mark">Lost Knowledge</span>
         <span class="logo-sub">Archive of Vanishing Wisdom</span>
@@ -23,10 +23,10 @@
       <span></span><span></span><span></span>
     </button>
     <nav class="nav-links" aria-label="Main navigation">
-      <a href="/lost-knowledge/index.html"    class="nav-link">Archive</a>
-      <a href="/lost-knowledge/about.php"    class="nav-link">About</a>
-      <a href="/lost-knowledge/register.html" class="nav-link">Register</a>
-      <a href="/lost-knowledge/login.html"    class="nav-link active">Sign In</a>
+      <a href="/index.html"    class="nav-link">Archive</a>
+      <a href="/about.php"    class="nav-link">About</a>
+      <a href="/register.html" class="nav-link">Register</a>
+      <a href="/login.html"    class="nav-link active">Sign In</a>
     </nav>
   </div>
 </header>
@@ -49,11 +49,11 @@
 
       <div class="form-card-header">
         <h2>Sign in</h2>
-        <p>Don't have an account? <a href="/lost-knowledge/register.html">Create one free</a></p>
+        <p>Don't have an account? <a href="/register.html">Create one free</a></p>
       </div>
 
       <!-- Google Sign-In Button -->
-      <a href="/lost-knowledge/config/google_redirect.php" class="btn-google" id="googleLoginBtn">
+      <a href="/config/google_redirect.php" class="btn-google" id="googleLoginBtn">
         <svg class="google-icon" viewBox="0 0 24 24" width="20" height="20">
           <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
           <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -73,7 +73,7 @@
         All authentication logic (session, DB, password_verify) lives in PHP.
         This file contains ONLY the UI — no server code here.
       -->
-      <form id="loginForm" method="POST" action="/lost-knowledge/login_process.php" novalidate>
+      <form id="loginForm" method="POST" action="/login_process.php" novalidate>
 
         <div class="form-group">
           <label for="identifier">Email or Phone number <span class="req">*</span></label>
@@ -96,7 +96,7 @@
             <input type="checkbox" name="remember_me" value="1" style="accent-color:var(--amber);width:15px;height:15px">
             Remember me for 30 days
           </label>
-          <a href="/lost-knowledge/forgot_password.html" class="forgot-link">Forgot password?</a>
+          <a href="/forgot_password.html" class="forgot-link">Forgot password?</a>
         </div>
 
         <hr class="form-divider">
@@ -115,13 +115,13 @@
   <div class="container">
     <div class="footer-bottom">
       <span>&copy; <span id="yr"></span> Lost Knowledge</span>
-      <span><a href="/lost-knowledge/about.php" style="color:var(--ink-300)">About</a></span>
+      <span><a href="/about.php" style="color:var(--ink-300)">About</a></span>
     </div>
   </div>
 </footer>
 
-<script src="/lost-knowledge/assets/js/script.js"></script>
-<script src="/lost-knowledge/assets/js/features.js"></script>
+<script src="/assets/js/script.js"></script>
+<script src="/assets/js/features.js"></script>
 <script>
   document.getElementById('yr').textContent = new Date().getFullYear();
 

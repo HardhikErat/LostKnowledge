@@ -170,7 +170,7 @@ function initNotificationBell() {
 }
 
 function loadNotifCount() {
-  fetch('/lost-knowledge/api/notifications.php?action=count')
+  fetch('/api/notifications.php?action=count')
     .then(r => r.json())
     .then(d => {
       const badge = document.getElementById('notifBadge');
@@ -188,7 +188,7 @@ function loadNotifications() {
   const list = document.getElementById('notifList');
   if (!list) return;
 
-  fetch('/lost-knowledge/api/notifications.php?action=list')
+  fetch('/api/notifications.php?action=list')
     .then(r => r.json())
     .then(d => {
       if (!d.success || !d.data?.length) {
@@ -209,7 +209,7 @@ function loadNotifications() {
 }
 
 window.markRead = function(id) {
-  fetch('/lost-knowledge/api/notifications.php', {
+  fetch('/api/notifications.php', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ action: 'read', id })
@@ -217,7 +217,7 @@ window.markRead = function(id) {
 };
 
 window.markAllRead = function() {
-  fetch('/lost-knowledge/api/notifications.php', {
+  fetch('/api/notifications.php', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ action: 'read_all' })
@@ -504,7 +504,7 @@ function initLeafletMap() {
     }
 
     // Load entries and plot
-    fetch('/lost-knowledge/api/knowledge.php?per_page=50&status=approved')
+    fetch('/api/knowledge.php?per_page=50&status=approved')
       .then(r => r.json())
       .then(data => {
         if (!data.success || !data.data) return;
@@ -524,7 +524,7 @@ function initLeafletMap() {
             <div class="map-popup-title">${(e.title || '').replace(/</g, '&lt;')}</div>
             <div class="map-popup-cat">${(e.category_name || 'General').replace(/</g, '&lt;')} · ${(e.region || '').replace(/</g, '&lt;')}</div>
             <div class="map-popup-summary">${(e.summary || '').replace(/</g, '&lt;').substring(0, 120)}…</div>
-            <a href="/lost-knowledge/entry.php?id=${e.id}" style="display:inline-block;margin-top:8px;font-size:12px;color:#D89748;font-weight:500">Read more →</a>
+            <a href="/entry.php?id=${e.id}" style="display:inline-block;margin-top:8px;font-size:12px;color:#D89748;font-weight:500">Read more →</a>
           `);
           markers.addLayer ? markers.addLayer(marker) : markers.addLayer(marker);
         });

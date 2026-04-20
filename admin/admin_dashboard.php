@@ -27,12 +27,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['action'])) {
         if ($action === 'approve') {
           create_notification($ownerId, 'entry_approved',
             "Your entry \"{$entryTitle}\" has been approved and is now live!",
-            "/lost-knowledge/entry.php?id={$entryId}");
+            "/entry.php?id={$entryId}");
           award_karma($ownerId, 25); // +25 karma for approval
         } else {
           create_notification($ownerId, 'entry_rejected',
             "Your entry \"{$entryTitle}\" was not approved. Consider revising and resubmitting.",
-            "/lost-knowledge/edit_entry.php?id={$entryId}");
+            "/edit_entry.php?id={$entryId}");
         }
       }
 
@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['action'])) {
       $_SESSION['flash_error'] = 'Action failed.';
     }
   }
-  header('Location: /lost-knowledge/admin/admin_dashboard.php'); exit;
+  header('Location: /admin/admin_dashboard.php'); exit;
 }
 
 try {
@@ -91,15 +91,15 @@ $err = $_SESSION['flash_error']   ?? ''; unset($_SESSION['flash_error']);
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin — Lost Knowledge</title>
-  <link rel="stylesheet" href="/lost-knowledge/assets/css/style.css">
-  <link rel="stylesheet" href="/lost-knowledge/assets/css/features.css">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="stylesheet" href="/assets/css/features.css">
 </head>
 <body>
 
 <header class="site-header">
   <div class="container nav-inner">
-    <a href="/lost-knowledge/index.html" class="site-logo">
-      <img src="/lost-knowledge/assets/logo.png" alt="Lost Knowledge" class="nav-logo-img">
+    <a href="/index.html" class="site-logo">
+      <img src="/assets/logo.png" alt="Lost Knowledge" class="nav-logo-img">
       <div class="logo-text">
         <span class="logo-mark">Lost Knowledge</span>
         <span class="logo-sub">Archive of Vanishing Wisdom</span>
@@ -107,10 +107,10 @@ $err = $_SESSION['flash_error']   ?? ''; unset($_SESSION['flash_error']);
     </a>
     <button class="nav-toggle" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
     <nav class="nav-links">
-      <a href="/lost-knowledge/index.html"                class="nav-link">Archive</a>
-      <a href="/lost-knowledge/dashboard.php"             class="nav-link">My Dashboard</a>
-      <a href="/lost-knowledge/admin/admin_dashboard.php" class="nav-link active">Admin</a>
-      <a href="/lost-knowledge/logout.php"                class="nav-link">Sign Out</a>
+      <a href="/index.html"                class="nav-link">Archive</a>
+      <a href="/dashboard.php"             class="nav-link">My Dashboard</a>
+      <a href="/admin/admin_dashboard.php" class="nav-link active">Admin</a>
+      <a href="/logout.php"                class="nav-link">Sign Out</a>
     </nav>
   </div>
 </header>
@@ -155,7 +155,7 @@ $err = $_SESSION['flash_error']   ?? ''; unset($_SESSION['flash_error']);
       </span>
       <span class="admin-tab" id="tab-all"      onclick="showTab('all')">All Entries</span>
       <span class="admin-tab" id="tab-users"    onclick="showTab('users')">Keepers</span>
-      <a href="/lost-knowledge/admin/feedback.php" class="admin-tab" style="text-decoration:none">
+      <a href="/admin/feedback.php" class="admin-tab" style="text-decoration:none">
         Feedback
         <?php
           try {
@@ -182,7 +182,7 @@ $err = $_SESSION['flash_error']   ?? ''; unset($_SESSION['flash_error']);
               <div style="font-size:.68rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--amber-dark);margin-bottom:.35rem">
                 <?= htmlspecialchars($e['cat'] ?? 'Uncategorised') ?>
               </div>
-              <a href="/lost-knowledge/entry.php?id=<?= $e['id'] ?>" style="font-family:'Playfair Display',Georgia,serif;font-size:1.1rem;font-weight:700;color:var(--ink-black)">
+              <a href="/entry.php?id=<?= $e['id'] ?>" style="font-family:'Playfair Display',Georgia,serif;font-size:1.1rem;font-weight:700;color:var(--ink-black)">
                 <?= htmlspecialchars($e['title']) ?>
               </a>
               <p style="color:var(--text-faint);font-size:.875rem;margin:.4rem 0 .5rem">
@@ -205,7 +205,7 @@ $err = $_SESSION['flash_error']   ?? ''; unset($_SESSION['flash_error']);
                 <input type="hidden" name="entry_id" value="<?= $e['id'] ?>">
                 <button type="submit" class="btn btn-danger btn-sm">✕ Reject</button>
               </form>
-              <a href="/lost-knowledge/edit_entry.php?id=<?= $e['id'] ?>" class="btn btn-ghost btn-sm">Edit</a>
+              <a href="/edit_entry.php?id=<?= $e['id'] ?>" class="btn btn-ghost btn-sm">Edit</a>
             </div>
           </div>
         </div>
@@ -222,7 +222,7 @@ $err = $_SESSION['flash_error']   ?? ''; unset($_SESSION['flash_error']);
             <?php foreach ($allEntries as $e): ?>
             <tr>
               <td style="color:var(--text-faint)"><?= $e['id'] ?></td>
-              <td style="max-width:220px"><a href="/lost-knowledge/entry.php?id=<?= $e['id'] ?>" style="color:var(--amber-dark);font-weight:500"><?= htmlspecialchars($e['title']) ?></a></td>
+              <td style="max-width:220px"><a href="/entry.php?id=<?= $e['id'] ?>" style="color:var(--amber-dark);font-weight:500"><?= htmlspecialchars($e['title']) ?></a></td>
               <td><?= htmlspecialchars($e['cat'] ?? '—') ?></td>
               <td><?= htmlspecialchars($e['username']) ?></td>
               <td><span class="ec-status <?= $e['status'] ?>"><?= ucfirst($e['status']) ?></span></td>
@@ -235,8 +235,8 @@ $err = $_SESSION['flash_error']   ?? ''; unset($_SESSION['flash_error']);
                   <?php if ($e['status'] !== 'rejected'): ?>
                   <form method="POST" style="display:inline"><input type="hidden" name="action" value="reject"><input type="hidden" name="entry_id" value="<?= $e['id'] ?>"><button type="submit" class="btn btn-danger btn-sm" style="padding:.3rem .55rem">✕</button></form>
                   <?php endif; ?>
-                  <a href="/lost-knowledge/edit_entry.php?id=<?= $e['id'] ?>" class="btn btn-ghost btn-sm">Edit</a>
-                  <a href="/lost-knowledge/delete_entry.php?id=<?= $e['id'] ?>" class="btn btn-danger btn-sm" data-confirm="Delete entry #<?= $e['id'] ?> permanently?">Del</a>
+                  <a href="/edit_entry.php?id=<?= $e['id'] ?>" class="btn btn-ghost btn-sm">Edit</a>
+                  <a href="/delete_entry.php?id=<?= $e['id'] ?>" class="btn btn-danger btn-sm" data-confirm="Delete entry #<?= $e['id'] ?> permanently?">Del</a>
                 </div>
               </td>
             </tr>
@@ -275,8 +275,8 @@ $err = $_SESSION['flash_error']   ?? ''; unset($_SESSION['flash_error']);
   </div>
 </footer>
 
-<script src="/lost-knowledge/assets/js/script.js"></script>
-<script src="/lost-knowledge/assets/js/features.js"></script>
+<script src="/assets/js/script.js"></script>
+<script src="/assets/js/features.js"></script>
 <script>
 function showTab(name) {
   ['pending','all','users'].forEach(t => {

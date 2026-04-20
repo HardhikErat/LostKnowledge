@@ -8,7 +8,7 @@ session_start();
 require_once __DIR__ . '/config/db.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: /lost-knowledge/forgot_password.html');
+    header('Location: /forgot_password.html');
     exit;
 }
 
@@ -20,7 +20,7 @@ $confirm  = $_POST['password_confirm'] ?? '';
 $errors = [];
 
 if (empty($token)) {
-    header('Location: /lost-knowledge/forgot_password.html?error=' . urlencode('Invalid reset link. Please request a new one.'));
+    header('Location: /forgot_password.html?error=' . urlencode('Invalid reset link. Please request a new one.'));
     exit;
 }
 
@@ -33,7 +33,7 @@ if ($password !== $confirm)                  $errors[] = 'Passwords do not match
 
 if (!empty($errors)) {
     $msg = urlencode(implode(' ', $errors));
-    header("Location: /lost-knowledge/reset_password.html?token={$token}&error={$msg}");
+    header("Location: /reset_password.html?token={$token}&error={$msg}");
     exit;
 }
 
@@ -52,17 +52,17 @@ try {
     $reset = $stmt->fetch();
 
     if (!$reset) {
-        header('Location: /lost-knowledge/forgot_password.html?error=' . urlencode('Invalid or expired reset link. Please request a new one.'));
+        header('Location: /forgot_password.html?error=' . urlencode('Invalid or expired reset link. Please request a new one.'));
         exit;
     }
 
     if ($reset['used']) {
-        header('Location: /lost-knowledge/forgot_password.html?error=' . urlencode('This reset link has already been used. Request a new one.'));
+        header('Location: /forgot_password.html?error=' . urlencode('This reset link has already been used. Request a new one.'));
         exit;
     }
 
     if (strtotime($reset['expires_at']) < time()) {
-        header('Location: /lost-knowledge/forgot_password.html?error=' . urlencode('This reset link has expired. Please request a new one.'));
+        header('Location: /forgot_password.html?error=' . urlencode('This reset link has expired. Please request a new one.'));
         exit;
     }
 
@@ -79,11 +79,11 @@ try {
 
     // Redirect to login with success message
     $_SESSION['flash_success'] = 'Password updated successfully! Please sign in with your new password.';
-    header('Location: /lost-knowledge/login.html?success=' . urlencode('Password updated successfully! Please sign in with your new password.'));
+    header('Location: /login.html?success=' . urlencode('Password updated successfully! Please sign in with your new password.'));
     exit;
 
 } catch (Exception $e) {
     error_log('[LK] Reset password error: ' . $e->getMessage());
-    header('Location: /lost-knowledge/reset_password.html?token=' . $token . '&error=' . urlencode('Something went wrong. Please try again.'));
+    header('Location: /reset_password.html?token=' . $token . '&error=' . urlencode('Something went wrong. Please try again.'));
     exit;
 }

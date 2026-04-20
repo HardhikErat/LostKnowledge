@@ -100,7 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             create_notification(
                                 (int)$entryInfo['user_id'], 'vote_milestone',
                                 "Your entry \"{$entryInfo['title']}\" has reached {$upCount} upvotes!",
-                                "/lost-knowledge/entry.php?id={$entryId}"
+                                "/entry.php?id={$entryId}"
                             );
                         }
                     }

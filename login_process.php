@@ -10,7 +10,7 @@ session_start();
 require_once __DIR__ . '/config/db.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: /lost-knowledge/login.html');
+    header('Location: /login.html');
     exit;
 }
 
@@ -19,7 +19,7 @@ $password   = $_POST['password'] ?? '';
 $remember   = !empty($_POST['remember_me']);
 
 if (empty($identifier) || empty($password)) {
-    header('Location: /lost-knowledge/login.html?error=required');
+    header('Location: /login.html?error=required');
     exit;
 }
 
@@ -38,7 +38,7 @@ if (preg_match('/^[6-9]\d{9}$/', $cleanIdentifier)) {
     $isEmail = true;
     $identifier = strtolower($identifier);
 } else {
-    header('Location: /lost-knowledge/login.html?error=invalid');
+    header('Location: /login.html?error=invalid');
     exit;
 }
 
@@ -56,7 +56,7 @@ try {
     $user = $stmt->fetch();
 
     if (!$user || empty($user['password']) || !password_verify($password, $user['password'])) {
-        header('Location: /lost-knowledge/login.html?error=invalid');
+        header('Location: /login.html?error=invalid');
         exit;
     }
 
@@ -93,14 +93,14 @@ try {
     $_SESSION['flash_success'] = 'Welcome back, ' . htmlspecialchars($user['username']) . '!';
 
     if ($user['role'] === 'admin') {
-        header('Location: /lost-knowledge/admin/admin_dashboard.php');
+        header('Location: /admin/admin_dashboard.php');
     } else {
-        header('Location: /lost-knowledge/dashboard.php');
+        header('Location: /dashboard.php');
     }
     exit;
 
 } catch (Exception $e) {
     error_log('[LK] Login error: ' . $e->getMessage());
-    header('Location: /lost-knowledge/login.html?error=invalid');
+    header('Location: /login.html?error=invalid');
     exit;
 }

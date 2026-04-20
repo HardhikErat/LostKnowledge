@@ -5,15 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Got questions about Lost Knowledge? Our AI assistant can help.">
   <title>Help Bot — Lost Knowledge</title>
-  <link rel="stylesheet" href="/lost-knowledge/assets/css/style.css">
-  <link rel="stylesheet" href="/lost-knowledge/assets/css/features.css">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="stylesheet" href="/assets/css/features.css">
 </head>
 <body>
 
 <header class="site-header">
   <div class="container nav-inner">
-    <a href="/lost-knowledge/index.html" class="site-logo">
-      <img src="/lost-knowledge/assets/logo.png" alt="Lost Knowledge" class="nav-logo-img">
+    <a href="/index.html" class="site-logo">
+      <img src="/assets/logo.png" alt="Lost Knowledge" class="nav-logo-img">
       <div class="logo-text">
         <span class="logo-mark">Lost Knowledge</span>
         <span class="logo-sub">Archive of Vanishing Wisdom</span>
@@ -23,10 +23,10 @@
       <span></span><span></span><span></span>
     </button>
     <nav class="nav-links" aria-label="Main navigation">
-      <a href="/lost-knowledge/index.html"    class="nav-link">Archive</a>
-      <a href="/lost-knowledge/about.php"    class="nav-link">About</a>
-      <a href="/lost-knowledge/register.html" class="nav-link">Register</a>
-      <a href="/lost-knowledge/login.html"    class="nav-link">Sign In</a>
+      <a href="/index.html"    class="nav-link">Archive</a>
+      <a href="/about.php"    class="nav-link">About</a>
+      <a href="/register.html" class="nav-link">Register</a>
+      <a href="/login.html"    class="nav-link">Sign In</a>
     </nav>
   </div>
 </header>
@@ -84,13 +84,13 @@
   <div class="container">
     <div class="footer-bottom">
       <span>&copy; <span id="yr"></span> Lost Knowledge</span>
-      <span><a href="/lost-knowledge/about.php" style="color:var(--ink-300)">About</a></span>
+      <span><a href="/about.php" style="color:var(--ink-300)">About</a></span>
     </div>
   </div>
 </footer>
 
-<script src="/lost-knowledge/assets/js/script.js"></script>
-<script src="/lost-knowledge/assets/js/features.js"></script>
+<script src="/assets/js/script.js"></script>
+<script src="/assets/js/features.js"></script>
 <script>
 document.getElementById('yr').textContent = new Date().getFullYear();
 
@@ -122,7 +122,7 @@ const FAQ = [
   },
   {
     q: "Is my data safe and secure?",
-    a: "Absolutely! We take security seriously:<br><br>🔒 Passwords are hashed with <strong>bcrypt</strong> (cost factor 12)<br>🛡️ Sessions are secured with <strong>httpOnly</strong> cookies<br>🔑 All form submissions use server-side validation<br>📜 Read our <a href='/lost-knowledge/privacy.html' style='color:var(--amber-light);'>Privacy Policy</a> for full details."
+    a: "Absolutely! We take security seriously:<br><br>🔒 Passwords are hashed with <strong>bcrypt</strong> (cost factor 12)<br>🛡️ Sessions are secured with <strong>httpOnly</strong> cookies<br>🔑 All form submissions use server-side validation<br>📜 Read our <a href='/privacy.html' style='color:var(--amber-light);'>Privacy Policy</a> for full details."
   },
   {
     q: "Can I bookmark/save entries?",
@@ -130,11 +130,11 @@ const FAQ = [
   },
   {
     q: "How do I reset my password?",
-    a: "Go to the <a href='/lost-knowledge/forgot_password.html' style='color:var(--amber-light);font-weight:600;'>Forgot Password</a> page. Enter your registered email address and we'll send you a reset link. The link expires in 1 hour. Click it to set a new password."
+    a: "Go to the <a href='/forgot_password.html' style='color:var(--amber-light);font-weight:600;'>Forgot Password</a> page. Enter your registered email address and we'll send you a reset link. The link expires in 1 hour. Click it to set a new password."
   },
   {
     q: "Can I sign in with Google?",
-    a: "Yes! On the <a href='/lost-knowledge/login.html' style='color:var(--amber-light);font-weight:600;'>Sign In</a> page, click the <strong>\"Sign in with Google\"</strong> button. If you're a new user, an account will be created automatically using your Google profile. If you already have an account with the same email, it will be linked."
+    a: "Yes! On the <a href='/login.html' style='color:var(--amber-light);font-weight:600;'>Sign In</a> page, click the <strong>\"Sign in with Google\"</strong> button. If you're a new user, an account will be created automatically using your Google profile. If you already have an account with the same email, it will be linked."
   }
 ];
 

@@ -91,6 +91,32 @@ function initReveal() {
   });
 }
 
+/* ── Phone number validation helper ───────────────── */
+function isValidIndianPhone(val) {
+  // Remove spaces, dashes, parens, plus
+  const clean = val.replace(/[\s\-\(\)\+]/g, '');
+  return /^[6-9]\d{9}$/.test(clean);
+}
+
+function isValidEmail(val) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
+}
+
+/**
+ * Detect whether an input value looks like a phone number or an email.
+ * Returns 'phone', 'email', or 'unknown'.
+ */
+function detectIdentifierType(val) {
+  const cleaned = val.replace(/[\s\-\(\)\+]/g, '');
+  // If it's all digits and 10 chars, treat as phone
+  if (/^\d{10}$/.test(cleaned)) return 'phone';
+  // If it contains @, treat as email
+  if (val.includes('@')) return 'email';
+  // If it's only digits (but not 10), still treat as phone attempt
+  if (/^\d+$/.test(cleaned)) return 'phone';
+  return 'email'; // default
+}
+
 /* ── Form validation ──────────────────────────────── */
 function validateField(input, rules) {
   const val  = input.value.trim();
@@ -106,7 +132,13 @@ function validateField(input, rules) {
   if (rules.required && !val)                         err = 'This field is required.';
   else if (rules.min && val.length < rules.min)        err = `Minimum ${rules.min} characters.`;
   else if (rules.max && val.length > rules.max)        err = `Maximum ${rules.max} characters.`;
-  else if (rules.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) err = 'Enter a valid email address.';
+  else if (rules.email && !isValidEmail(val))          err = 'Enter a valid email address.';
+  else if (rules.phone && !isValidIndianPhone(val))    err = 'Enter a valid 10-digit Indian mobile number (starts with 6–9).';
+  else if (rules.emailOrPhone) {
+    const type = detectIdentifierType(val);
+    if (type === 'email' && !isValidEmail(val))        err = 'Enter a valid email address.';
+    else if (type === 'phone' && !isValidIndianPhone(val)) err = 'Enter a valid 10-digit phone number (starts with 6–9).';
+  }
   else if (rules.match) {
     const other = $(rules.match);
     if (other && val !== other.value.trim()) err = rules.matchMsg || 'Fields do not match.';
@@ -140,6 +172,7 @@ function initRegisterForm() {
   const fields = [
     { el: form.querySelector('[name=username]'),         rules: { required:true, min:3, max:50, fn: v => /^[a-zA-Z0-9_]+$/.test(v) ? '' : 'Only letters, numbers, underscores.' } },
     { el: form.querySelector('[name=email]'),            rules: { required:true, email:true } },
+    { el: form.querySelector('[name=phone]'),            rules: { required:true, phone:true } },
     { el: form.querySelector('[name=password]'),         rules: { required:true, min:8, fn: v => /[A-Z]/.test(v) && /[0-9]/.test(v) ? '' : 'Need one uppercase and one number.' } },
     { el: form.querySelector('[name=password_confirm]'), rules: { required:true, match:'#password', matchMsg:'Passwords do not match.' } },
   ];
@@ -158,13 +191,19 @@ function initLoginForm() {
   const form = $('#loginForm');
   if (!form) return;
 
-  const email = form.querySelector('[name=email]');
-  const pass  = form.querySelector('[name=password]');
+  const identifier = form.querySelector('[name=identifier]');
+  const pass        = form.querySelector('[name=password]');
+
+  // Live validation for identifier
+  if (identifier) {
+    liveValidate(identifier, { required:true, emailOrPhone:true });
+  }
 
   form.addEventListener('submit', e => {
     clearErrors(form);
-    const ok = validateField(email, {required:true, email:true})
-             & validateField(pass,  {required:true});
+    let ok = true;
+    if (identifier) ok = validateField(identifier, { required:true, emailOrPhone:true }) & ok;
+    if (pass)       ok = validateField(pass,       { required:true }) & ok;
     if (!ok) e.preventDefault();
   });
 }
@@ -214,7 +253,7 @@ function initEntryList() {
 
   let page = 1;
   let category = new URLSearchParams(location.search).get('cat') || '';
-  let search = '';
+  let search = new URLSearchParams(location.search).get('search') || '';
   let debounce;
 
   const searchInput = $('#searchInput');
@@ -222,6 +261,7 @@ function initEntryList() {
 
   // Pre-fill from URL
   if (category && catSelect) catSelect.value = category;
+  if (search && searchInput) searchInput.value = search;
 
   if (searchInput) {
     searchInput.addEventListener('input', () => {
@@ -241,8 +281,13 @@ function initEntryList() {
     const params = new URLSearchParams({ page, per_page:9, status:'approved' });
     if (category) params.set('category', category);
     if (search)   params.set('search', search);
+    // Sort from features.js
+    if (window.__lkSort && window.__lkSort !== 'newest') params.set('sort', window.__lkSort);
+    // Tag from URL
+    const urlTag = new URLSearchParams(location.search).get('tag');
+    if (urlTag) params.set('tag', urlTag);
 
-    fetch(`/lost-knowledge/api/knowledge.php?${params}`)
+    fetch(`/api/knowledge.php?${params}`)
       .then(r => r.json())
       .then(data => {
         if (!data.success) throw new Error(data.error || 'Unknown error');
@@ -270,7 +315,8 @@ function initEntryList() {
     }
 
     grid.innerHTML = entries.map(e => `
-      <article class="entry-card" onclick="window.location='/lost-knowledge/entry.php?id=${e.id}'" role="button" tabindex="0">
+      <article class="entry-card" onclick="window.location.href='/entry.php?id=${e.id}'" role="button" tabindex="0">
+        ${e.image_path ? `<img src="${esc(e.image_path)}" alt="" class="ec-image">` : ''}
         <div class="ec-top">
           <span class="ec-cat">${esc(e.category_name || 'General')}</span>
         </div>
@@ -280,6 +326,9 @@ function initEntryList() {
           <div class="ec-meta">
             <span>${esc(e.username || 'Anonymous')}</span>
             ${e.region ? `<span class="ec-meta-sep">·</span><span>${esc(e.region)}</span>` : ''}
+            <span class="ec-meta-sep">·</span>
+            <span class="view-count">👁️ ${e.views || 0}</span>
+            ${e.comment_count ? `<span class="ec-meta-sep">·</span><span>💬 ${e.comment_count}</span>` : ''}
           </div>
           <div class="ec-votes">
             <button class="vote-btn ${e.user_vote==='up' ? 'up-active' : ''}"
@@ -322,7 +371,7 @@ function initEntryList() {
 
 /* ── Voting ───────────────────────────────────────── */
 window.castVote = function(entryId, type, btn) {
-  fetch('/lost-knowledge/api/knowledge.php', {
+  fetch('/api/knowledge.php', {
     method: 'POST',
     headers: {'Content-Type':'application/json'},
     body: JSON.stringify({action:'vote', entry_id:entryId, vote_type:type})
@@ -330,7 +379,7 @@ window.castVote = function(entryId, type, btn) {
   .then(r => r.json())
   .then(data => {
     if (!data.success) {
-      if (data.error === 'unauthenticated') window.location.href = '/lost-knowledge/login.php?ref=vote';
+      if (data.error === 'unauthenticated') window.location.href = '/login.html?ref=vote';
       return;
     }
     const card = btn.closest('.entry-card, .vote-panel, .entry-detail-wrap');
@@ -360,7 +409,7 @@ function initConfirm() {
 
 /* ── Load site stats into hero ────────────────────── */
 function loadStats() {
-  fetch('/lost-knowledge/api/knowledge.php?action=stats')
+  fetch('/api/knowledge.php?action=stats')
     .then(r => r.json())
     .then(data => {
       if (data.success && data.stats) {
@@ -378,6 +427,63 @@ function loadStats() {
     .catch(() => {});
 }
 
+/* ── Floating Chat FAB (injected on every page) ──── */
+function initChatFab() {
+  // Don't show on the chatbot page itself
+  if (window.location.pathname.includes('chatbot.html')) return;
+
+  const fab = document.createElement('a');
+  fab.href = '/chatbot.html';
+  fab.className = 'chat-fab';
+  fab.title = 'Need help? Chat with our bot';
+  fab.setAttribute('aria-label', 'Open Help Bot');
+  fab.innerHTML = '💬';
+  document.body.appendChild(fab);
+}
+
+/* ── Dynamic Auth-Aware Nav (for static .html pages) ─ */
+function initAuthNav() {
+  fetch('/api/auth_check.php')
+    .then(r => r.json())
+    .then(data => {
+      const nav = $('.nav-links');
+      if (!nav) return;
+
+      if (data.logged_in) {
+        // Remove Register & Sign In links, add Dashboard & Sign Out
+        $$('.nav-link', nav).forEach(link => {
+          const href = link.getAttribute('href') || '';
+          if (href.includes('register.html') || href.includes('login.html')) {
+            link.remove();
+          }
+        });
+        // Remove nav-sep if present (no longer needed before auth links)
+        const sep = nav.querySelector('.nav-sep');
+
+        // Only add Dashboard/Sign Out if not already present
+        if (!nav.querySelector('[href*="dashboard.php"]')) {
+          const dashLink = document.createElement('a');
+          dashLink.href = '/dashboard.php';
+          dashLink.className = 'nav-link';
+          dashLink.textContent = 'Dashboard';
+          if (sep) sep.after(dashLink);
+          else nav.appendChild(dashLink);
+        }
+        if (!nav.querySelector('[href*="logout.php"]')) {
+          const outLink = document.createElement('a');
+          outLink.href = '/logout.php';
+          outLink.className = 'nav-link';
+          outLink.textContent = 'Sign Out';
+          // Insert before the Submit Entry CTA if it exists
+          const cta = nav.querySelector('.nav-cta');
+          if (cta) nav.insertBefore(outLink, cta);
+          else nav.appendChild(outLink);
+        }
+      }
+    })
+    .catch(() => {}); // silently fail for pages that don't need it
+}
+
 /* ── Init ─────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
   initNav();
@@ -390,4 +496,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initEntryList();
   initConfirm();
   loadStats();
+  initChatFab();
+  initAuthNav();
 });

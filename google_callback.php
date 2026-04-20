@@ -11,14 +11,14 @@ require_once __DIR__ . '/config/google.php';
 // Check for errors from Google
 if (isset($_GET['error'])) {
     error_log('[LK] Google OAuth error: ' . $_GET['error']);
-    header('Location: /lost-knowledge/login.html?error=' . urlencode('Google sign-in was cancelled.'));
+    header('Location: /login.html?error=' . urlencode('Google sign-in was cancelled.'));
     exit;
 }
 
 // Get the authorization code
 $code = $_GET['code'] ?? '';
 if (empty($code)) {
-    header('Location: /lost-knowledge/login.html?error=' . urlencode('Invalid Google response. Please try again.'));
+    header('Location: /login.html?error=' . urlencode('Invalid Google response. Please try again.'));
     exit;
 }
 
@@ -94,14 +94,14 @@ try {
     $_SESSION['flash_success'] = 'Welcome, ' . htmlspecialchars($user['username']) . '! Signed in with Google.';
 
     if ($user['role'] === 'admin') {
-        header('Location: /lost-knowledge/admin/admin_dashboard.php');
+        header('Location: /admin/admin_dashboard.php');
     } else {
-        header('Location: /lost-knowledge/dashboard.php');
+        header('Location: /dashboard.php');
     }
     exit;
 
 } catch (Exception $e) {
     error_log('[LK] Google OAuth error: ' . $e->getMessage());
-    header('Location: /lost-knowledge/login.html?error=' . urlencode('Google sign-in failed. Please try again.'));
+    header('Location: /login.html?error=' . urlencode('Google sign-in failed. Please try again.'));
     exit;
 }

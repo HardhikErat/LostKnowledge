@@ -23,5 +23,5 @@ if (isset($_COOKIE['lk_remember'])) {
     setcookie('lk_remember', '', ['expires' => time()-3600, 'path'=>'/', 'httponly'=>true, 'samesite'=>'Lax']);
 }
 
-header('Location: /lost-knowledge/index.html');
+header('Location: /index.html');
 exit;

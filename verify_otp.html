@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Enter the OTP sent to your mobile to reset your password.">
   <title>Verify OTP — Lost Knowledge</title>
-  <link rel="stylesheet" href="/lost-knowledge/assets/css/style.css">
-  <link rel="stylesheet" href="/lost-knowledge/assets/css/features.css">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="stylesheet" href="/assets/css/features.css">
   <style>
     .otp-inputs { display:flex; gap:10px; justify-content:center; margin:1.5rem 0; }
     .otp-inputs input {
@@ -36,8 +36,8 @@
 
 <header class="site-header">
   <div class="container nav-inner">
-    <a href="/lost-knowledge/index.html" class="site-logo">
-      <img src="/lost-knowledge/assets/logo.png" alt="Lost Knowledge" class="nav-logo-img">
+    <a href="/index.html" class="site-logo">
+      <img src="/assets/logo.png" alt="Lost Knowledge" class="nav-logo-img">
       <div class="logo-text">
         <span class="logo-mark">Lost Knowledge</span>
         <span class="logo-sub">Archive of Vanishing Wisdom</span>
@@ -47,10 +47,10 @@
       <span></span><span></span><span></span>
     </button>
     <nav class="nav-links" aria-label="Main navigation">
-      <a href="/lost-knowledge/index.html"    class="nav-link">Archive</a>
-      <a href="/lost-knowledge/about.php"     class="nav-link">About</a>
-      <a href="/lost-knowledge/register.html" class="nav-link">Register</a>
-      <a href="/lost-knowledge/login.html"    class="nav-link">Sign In</a>
+      <a href="/index.html"    class="nav-link">Archive</a>
+      <a href="/about.php"     class="nav-link">About</a>
+      <a href="/register.html" class="nav-link">Register</a>
+      <a href="/login.html"    class="nav-link">Sign In</a>
     </nav>
   </div>
 </header>
@@ -85,7 +85,7 @@
         <div class="otp-code" id="otpDebugCode"></div>
       </div>
 
-      <form id="otpForm" method="POST" action="/lost-knowledge/verify_otp_process.php" novalidate>
+      <form id="otpForm" method="POST" action="/verify_otp_process.php" novalidate>
         <input type="hidden" name="token" id="tokenInput" value="">
         <input type="hidden" name="otp" id="otpHidden" value="">
 
@@ -112,7 +112,7 @@
       </form>
 
       <p class="form-footer" style="margin-top:1rem">
-        <a href="/lost-knowledge/forgot_password.html">← Try a different method</a>
+        <a href="/forgot_password.html">← Try a different method</a>
       </p>
     </div>
   </div>
@@ -122,13 +122,13 @@
   <div class="container">
     <div class="footer-bottom">
       <span>&copy; <span id="yr"></span> Lost Knowledge</span>
-      <span><a href="/lost-knowledge/about.php" style="color:var(--text-on-dark-faint)">About</a></span>
+      <span><a href="/about.php" style="color:var(--text-on-dark-faint)">About</a></span>
     </div>
   </div>
 </footer>
 
-<script src="/lost-knowledge/assets/js/script.js"></script>
-<script src="/lost-knowledge/assets/js/features.js"></script>
+<script src="/assets/js/script.js"></script>
+<script src="/assets/js/features.js"></script>
 <script>
   document.getElementById('yr').textContent = new Date().getFullYear();
 
@@ -146,7 +146,7 @@
   }
 
   // ── Fetch OTP for dev mode ───────────────────────────
-  fetch('/lost-knowledge/api/get_otp_debug.php')
+  fetch('/api/get_otp_debug.php')
     .then(r => r.json())
     .then(data => {
       if (data.otp) {
@@ -222,7 +222,7 @@
 
   // ── Resend OTP ──────────────────────────────────────
   resendBtn.addEventListener('click', () => {
-    window.location.href = '/lost-knowledge/forgot_password.html?tab=phone';
+    window.location.href = '/forgot_password.html?tab=phone';
   });
 
   // ── Form Validation ──────────────────────────────────

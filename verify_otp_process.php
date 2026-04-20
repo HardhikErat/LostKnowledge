@@ -7,7 +7,7 @@ session_start();
 require_once __DIR__ . '/config/db.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: /lost-knowledge/forgot_password.html');
+    header('Location: /forgot_password.html');
     exit;
 }
 
@@ -15,12 +15,12 @@ $token = trim($_POST['token'] ?? '');
 $otp   = trim($_POST['otp'] ?? '');
 
 if (empty($token) || empty($otp)) {
-    header('Location: /lost-knowledge/forgot_password.html?tab=phone&error=' . urlencode('Invalid request. Please try again.'));
+    header('Location: /forgot_password.html?tab=phone&error=' . urlencode('Invalid request. Please try again.'));
     exit;
 }
 
 if (!preg_match('/^\d{6}$/', $otp)) {
-    header('Location: /lost-knowledge/verify_otp.html?token=' . $token . '&error=' . urlencode('OTP must be exactly 6 digits.'));
+    header('Location: /verify_otp.html?token=' . $token . '&error=' . urlencode('OTP must be exactly 6 digits.'));
     exit;
 }
 
@@ -37,22 +37,22 @@ try {
     $reset = $stmt->fetch();
 
     if (!$reset) {
-        header('Location: /lost-knowledge/forgot_password.html?tab=phone&error=' . urlencode('Invalid OTP session. Please request a new one.'));
+        header('Location: /forgot_password.html?tab=phone&error=' . urlencode('Invalid OTP session. Please request a new one.'));
         exit;
     }
 
     if ($reset['used']) {
-        header('Location: /lost-knowledge/forgot_password.html?tab=phone&error=' . urlencode('This OTP has already been used. Request a new one.'));
+        header('Location: /forgot_password.html?tab=phone&error=' . urlencode('This OTP has already been used. Request a new one.'));
         exit;
     }
 
     if (strtotime($reset['expires_at']) < time()) {
-        header('Location: /lost-knowledge/forgot_password.html?tab=phone&error=' . urlencode('This OTP has expired. Please request a new one.'));
+        header('Location: /forgot_password.html?tab=phone&error=' . urlencode('This OTP has expired. Please request a new one.'));
         exit;
     }
 
     if ($reset['otp'] !== $otp) {
-        header('Location: /lost-knowledge/verify_otp.html?token=' . $token . '&error=' . urlencode('Incorrect OTP. Please check and try again.'));
+        header('Location: /verify_otp.html?token=' . $token . '&error=' . urlencode('Incorrect OTP. Please check and try again.'));
         exit;
     }
 
@@ -60,11 +60,11 @@ try {
     // Clear session OTP debug data
     unset($_SESSION['otp_debug'], $_SESSION['otp_token'], $_SESSION['otp_phone']);
 
-    header('Location: /lost-knowledge/reset_password.html?token=' . $token . '&via=otp');
+    header('Location: /reset_password.html?token=' . $token . '&via=otp');
     exit;
 
 } catch (Exception $e) {
     error_log('[LK] OTP verification error: ' . $e->getMessage());
-    header('Location: /lost-knowledge/verify_otp.html?token=' . $token . '&error=' . urlencode('Something went wrong. Please try again.'));
+    header('Location: /verify_otp.html?token=' . $token . '&error=' . urlencode('Something went wrong. Please try again.'));
     exit;
 }

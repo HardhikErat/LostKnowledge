@@ -9,26 +9,26 @@ require_login('/edit_entry.php');
 
 $userId = current_user_id();
 $id = (int)($_GET['id'] ?? 0);
-if ($id <= 0) { header('Location: /lost-knowledge/dashboard.php'); exit; }
+if ($id <= 0) { header('Location: /dashboard.php'); exit; }
 
 try {
     $pdo = get_pdo();
     $stmt = $pdo->prepare('SELECT * FROM knowledge_entries WHERE id = ?');
     $stmt->execute([$id]);
     $entry = $stmt->fetch();
-    if (!$entry) { header('Location: /lost-knowledge/dashboard.php'); exit; }
+    if (!$entry) { header('Location: /dashboard.php'); exit; }
 
     // Only owner or admin
     if ((int)$entry['user_id'] !== $userId && !is_admin()) {
         $_SESSION['flash_error'] = 'You can only edit your own entries.';
-        header('Location: /lost-knowledge/dashboard.php'); exit;
+        header('Location: /dashboard.php'); exit;
     }
 
     $cats = $pdo->query('SELECT id, name FROM categories ORDER BY name')->fetchAll();
     $tagList = get_entry_tags($id);
     $tagStr = implode(',', array_column($tagList, 'name'));
 } catch (Exception $e) {
-    header('Location: /lost-knowledge/dashboard.php'); exit;
+    header('Location: /dashboard.php'); exit;
 }
 
 $errors = [];
@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
             $fname = 'entry_' . $id . '_' . time() . '.' . $ext;
             if (move_uploaded_file($_FILES['image']['tmp_name'], "$dir/$fname")) {
-                $imagePath = "/lost-knowledge/uploads/entries/$fname";
+                $imagePath = "/uploads/entries/$fname";
             }
         }
     }
@@ -80,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             process_tags($id, $tags);
 
             $_SESSION['flash_success'] = 'Entry updated — it will be re-reviewed before appearing publicly.';
-            header('Location: /lost-knowledge/dashboard.php'); exit;
+            header('Location: /dashboard.php'); exit;
         } catch (Exception $e) {
             $errors[] = 'Database error. Please try again.';
         }
@@ -109,15 +109,15 @@ try {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Edit Entry — Lost Knowledge</title>
-  <link rel="stylesheet" href="/lost-knowledge/assets/css/style.css">
-  <link rel="stylesheet" href="/lost-knowledge/assets/css/features.css">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="stylesheet" href="/assets/css/features.css">
 </head>
 <body>
 
 <header class="site-header">
   <div class="container nav-inner">
-    <a href="/lost-knowledge/index.html" class="site-logo">
-      <img src="/lost-knowledge/assets/logo.png" alt="Lost Knowledge" class="nav-logo-img">
+    <a href="/index.html" class="site-logo">
+      <img src="/assets/logo.png" alt="Lost Knowledge" class="nav-logo-img">
       <div class="logo-text">
         <span class="logo-mark">Lost Knowledge</span>
         <span class="logo-sub">Archive of Vanishing Wisdom</span>
@@ -125,9 +125,9 @@ try {
     </a>
     <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
     <nav class="nav-links">
-      <a href="/lost-knowledge/index.html" class="nav-link">Archive</a>
-      <a href="/lost-knowledge/dashboard.php" class="nav-link">Dashboard</a>
-      <a href="/lost-knowledge/logout.php" class="nav-link">Sign Out</a>
+      <a href="/index.html" class="nav-link">Archive</a>
+      <a href="/dashboard.php" class="nav-link">Dashboard</a>
+      <a href="/logout.php" class="nav-link">Sign Out</a>
     </nav>
   </div>
 </header>
@@ -137,9 +137,9 @@ try {
     <div class="section-label">Edit knowledge</div>
     <h1>Update entry</h1>
     <div style="display:flex;gap:12px;margin-top:12px">
-      <a href="/lost-knowledge/entry.php?id=<?= $id ?>" class="btn btn-ghost btn-sm">View entry</a>
+      <a href="/entry.php?id=<?= $id ?>" class="btn btn-ghost btn-sm">View entry</a>
       <?php if ($revisionCount > 0): ?>
-        <a href="/lost-knowledge/revisions.php?id=<?= $id ?>" class="btn btn-ghost btn-sm">📜 <?= $revisionCount ?> revision<?= $revisionCount !== 1 ? 's' : '' ?></a>
+        <a href="/revisions.php?id=<?= $id ?>" class="btn btn-ghost btn-sm">📜 <?= $revisionCount ?> revision<?= $revisionCount !== 1 ? 's' : '' ?></a>
       <?php endif; ?>
     </div>
   </div>
@@ -220,7 +220,7 @@ try {
         <hr class="form-divider">
 
         <div style="display:flex;gap:.75rem;justify-content:flex-end;flex-wrap:wrap">
-          <a href="/lost-knowledge/dashboard.php" class="btn btn-ghost">Cancel</a>
+          <a href="/dashboard.php" class="btn btn-ghost">Cancel</a>
           <button type="submit" class="btn btn-amber">Save changes →</button>
         </div>
 
@@ -233,8 +233,8 @@ try {
   <div class="container"><div class="footer-bottom"><span>&copy; <?= date('Y') ?> Lost Knowledge</span></div></div>
 </footer>
 
-<script src="/lost-knowledge/assets/js/script.js"></script>
-<script src="/lost-knowledge/assets/js/features.js"></script>
+<script src="/assets/js/script.js"></script>
+<script src="/assets/js/features.js"></script>
 <script>
   // Pre-fill tags from hidden input
   document.addEventListener('DOMContentLoaded', () => {

@@ -10,7 +10,7 @@ session_start();
 require_once __DIR__ . '/config/db.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: /lost-knowledge/register.html');
+    header('Location: /register.html');
     exit;
 }
 
@@ -42,7 +42,7 @@ if ($password !== $confirm)                                $errors[] = 'Password
 
 if (!empty($errors)) {
     $msg = urlencode(implode(' ', $errors));
-    header("Location: /lost-knowledge/register.html?error={$msg}");
+    header("Location: /register.html?error={$msg}");
     exit;
 }
 
@@ -54,7 +54,7 @@ try {
     $check->execute([$username, $email, $phone]);
     if ($check->fetch()) {
         $msg = urlencode('That username, email, or phone number is already registered.');
-        header("Location: /lost-knowledge/register.html?error={$msg}");
+        header("Location: /register.html?error={$msg}");
         exit;
     }
 
@@ -74,12 +74,12 @@ try {
     $_SESSION['logged_in'] = true;
     $_SESSION['flash_success'] = 'Welcome to the Archive, ' . htmlspecialchars($username) . '!';
 
-    header('Location: /lost-knowledge/dashboard.php');
+    header('Location: /dashboard.php');
     exit;
 
 } catch (Exception $e) {
     error_log('[LK] Register error: ' . $e->getMessage());
     $msg = urlencode('A database error occurred. Please try again.');
-    header("Location: /lost-knowledge/register.html?error={$msg}");
+    header("Location: /register.html?error={$msg}");
     exit;
 }
