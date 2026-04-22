@@ -857,6 +857,9 @@ button, input, textarea, select { font-family:var(--font-body); }
   .form-card   { padding:var(--space-4) var(--space-3); }
   .hero-actions { flex-direction:column; }
   .admin-grid  { grid-template-columns:repeat(3,1fr); }
+  .data-table td, .data-table th { padding: 18px 14px; font-size: 0.9rem; }
+  .cat-pill { padding: 14px 20px; font-size: 1.05rem; }
+  .nav-link { padding: 16px; font-size: 1.1rem; text-align: center; }
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -1259,5 +1262,5 @@ button, input, textarea, select { font-family:var(--font-body); }
   .chat-avatar { width:32px; height:32px; font-size:14px; }
   .chat-content { padding:10px 14px; }
   .chat-chips { max-height:140px; }
-  .chat-fab { width:50px; height:50px; font-size:20px; bottom:20px; right:20px; }
+  .chat-fab { width:50px; height:50px; font-size:20px; bottom:80px; right:15px; }
 }

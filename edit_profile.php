@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $ext = pathinfo($_FILES['avatar']['name'], PATHINFO_EXTENSION);
                 $fname = 'av_' . $userId . '_' . time() . '.' . $ext;
                 if (move_uploaded_file($_FILES['avatar']['tmp_name'], "$dir/$fname")) {
-                    $avatarPath = "/lost-knowledge/uploads/avatars/$fname";
+                    $avatarPath = "/uploads/avatars/$fname";
                 }
             }
         }
@@ -120,26 +120,31 @@ require_once __DIR__ . '/config/notify.php';
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Edit Profile — Lost Knowledge</title>
-  <link rel="stylesheet" href="/lost-knowledge/assets/css/style.css">
-  <link rel="stylesheet" href="/lost-knowledge/assets/css/features.css">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="stylesheet" href="/assets/css/features.css">
 </head>
 <body>
 
 <header class="site-header">
   <div class="container nav-inner">
-    <a href="/lost-knowledge/index.html" class="site-logo">
-      <img src="/lost-knowledge/assets/logo.png" alt="Lost Knowledge" class="nav-logo-img">
+    <a href="/index.html" class="site-logo">
+      <img src="/assets/logo.png" alt="Lost Knowledge" class="nav-logo-img">
       <div class="logo-text">
         <span class="logo-mark">Lost Knowledge</span>
         <span class="logo-sub">Archive of Vanishing Wisdom</span>
       </div>
     </a>
-    <button class="nav-toggle" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
-    <nav class="nav-links">
-      <a href="/lost-knowledge/index.html"    class="nav-link">Archive</a>
-      <a href="/lost-knowledge/dashboard.php" class="nav-link">Dashboard</a>
-      <a href="/lost-knowledge/edit_profile.php" class="nav-link active">Profile</a>
-      <a href="/lost-knowledge/logout.php"    class="nav-link">Sign Out</a>
+    <button class="nav-toggle" aria-label="Menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+        <nav class="nav-links" aria-label="Main navigation">
+      <a href="/index.html" class="nav-link">Archive</a>
+      <a href="/explore_map.html" class="nav-link">🗺️ Map</a>
+      <a href="/about.php" class="nav-link">About</a>
+      <div class="nav-sep"></div>
+      <a href="/register.html" class="nav-link auth-link">Register</a>
+      <a href="/login.html" class="nav-link auth-link">Sign In</a>
+      <a href="/submit.php" class="nav-link nav-cta">✦ Submit Entry</a>
     </nav>
   </div>
 </header>
@@ -290,8 +295,8 @@ require_once __DIR__ . '/config/notify.php';
   </div>
 </footer>
 
-<script src="/lost-knowledge/assets/js/script.js"></script>
-<script src="/lost-knowledge/assets/js/features.js"></script>
+<script src="/assets/js/script.js"></script>
+<script src="/assets/js/features.js"></script>
 <script>
   const bioEl = document.getElementById('bio');
   const bioCount = document.getElementById('bioCount');

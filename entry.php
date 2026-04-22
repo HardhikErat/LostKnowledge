@@ -4,7 +4,7 @@ require_once __DIR__ . '/config/db.php';
 require_once __DIR__ . '/config/notify.php';
 
 $id = (int)($_GET['id'] ?? 0);
-if ($id <= 0) { header('Location: /lost-knowledge/index.html'); exit; }
+if ($id <= 0) { header('Location: /index.html'); exit; }
 
 try {
   $pdo = get_pdo();
@@ -19,11 +19,16 @@ try {
   );
   $stmt->execute([$id, is_admin() ? 1 : 0]);
   $e = $stmt->fetch();
-  if (!$e) { header('HTTP/1.1 404 Not Found'); header('Location: /lost-knowledge/index.html'); exit; }
+  if (!$e) { header('HTTP/1.1 404 Not Found'); header('Location: /index.html'); exit; }
 
   // Increment view counter
   $pdo->prepare('UPDATE knowledge_entries SET views = views + 1 WHERE id = ?')->execute([$id]);
   $e['views'] = ($e['views'] ?? 0) + 1;
+
+  $baseRoot = strpos($_SERVER['REQUEST_URI'], '/') === 0 ? '/lost-knowledge' : '';
+  if (!empty($e['image_path']) && strpos($e['image_path'], '/') === 0 && $baseRoot === '') {
+      $e['image_path'] = substr($e['image_path'], 15);
+  }
 
   // Get tags
   $entryTags = get_entry_tags($id);
@@ -68,15 +73,15 @@ try {
 
 } catch (Exception $ex) {
   error_log('[LK] entry.php error: ' . $ex->getMessage());
-  header('Location: /lost-knowledge/index.html'); exit;
+  header('Location: /index.html'); exit;
 }
 
 $flashOk  = $_SESSION['flash_success'] ?? ''; unset($_SESSION['flash_success']);
 $flashErr = $_SESSION['flash_error']   ?? ''; unset($_SESSION['flash_error']);
 
 // Social card image
-$ogImage = $e['image_path'] ?? '/lost-knowledge/assets/og-default.jpg';
-$ogUrl   = 'http://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . '/lost-knowledge/entry.php?id=' . $id;
+$ogImage = $e['image_path'] ?? '/assets/og-default.jpg';
+$ogUrl   = 'http://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . '/entry.php?id=' . $id;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -103,37 +108,31 @@ $ogUrl   = 'http://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . '/lost-knowledge
   <?php endif; ?>
 
   <title><?= htmlspecialchars($e['title']) ?> — Lost Knowledge</title>
-  <link rel="stylesheet" href="/lost-knowledge/assets/css/style.css">
-  <link rel="stylesheet" href="/lost-knowledge/assets/css/features.css">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="stylesheet" href="/assets/css/features.css">
 </head>
 <body>
 
 <header class="site-header">
   <div class="container nav-inner">
-    <a href="/lost-knowledge/index.html" class="site-logo">
-      <img src="/lost-knowledge/assets/logo.png" alt="Lost Knowledge" class="nav-logo-img">
+    <a href="/index.html" class="site-logo">
+      <img src="/assets/logo.png" alt="Lost Knowledge" class="nav-logo-img">
       <div class="logo-text">
         <span class="logo-mark">Lost Knowledge</span>
         <span class="logo-sub">Archive of Vanishing Wisdom</span>
       </div>
     </a>
-    <button class="nav-toggle" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
-    <nav class="nav-links">
-      <div class="search-wrap">
-        <input type="text" id="navSearch" placeholder="🔍 Quick search…" autocomplete="off"
-               style="background:var(--bg-panel);border:1px solid var(--border-dark);border-radius:20px;padding:.35rem .85rem;font-size:.82rem;color:var(--text-on-dark);outline:none;width:160px;transition:width .3s"
-               onfocus="this.style.width='210px'" onblur="this.style.width='160px'">
-        <div class="ac-dropdown" id="acDrop"></div>
-      </div>
-      <a href="/lost-knowledge/index.html" class="nav-link">← Archive</a>
-      <?php if (is_logged_in()): ?>
-      <a href="/lost-knowledge/dashboard.php" class="nav-link">Dashboard</a>
-      <a href="/lost-knowledge/submit.php"    class="nav-link nav-cta">+ Submit</a>
-      <a href="/lost-knowledge/logout.php"    class="nav-link">Sign Out</a>
-      <?php else: ?>
-      <a href="/lost-knowledge/login.html"    class="nav-link">Sign In</a>
-      <a href="/lost-knowledge/register.html" class="nav-link nav-cta">Register</a>
-      <?php endif; ?>
+    <button class="nav-toggle" aria-label="Menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+        <nav class="nav-links" aria-label="Main navigation">
+      <a href="/index.html" class="nav-link">Archive</a>
+      <a href="/explore_map.html" class="nav-link">🗺️ Map</a>
+      <a href="/about.php" class="nav-link">About</a>
+      <div class="nav-sep"></div>
+      <a href="/register.html" class="nav-link auth-link">Register</a>
+      <a href="/login.html" class="nav-link auth-link">Sign In</a>
+      <a href="/submit.php" class="nav-link nav-cta">✦ Submit Entry</a>
     </nav>
   </div>
 </header>
@@ -141,7 +140,7 @@ $ogUrl   = 'http://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . '/lost-knowledge
 <div class="page-header">
   <div class="container">
     <div class="section-label">
-      <a href="/lost-knowledge/index.html?cat=<?= htmlspecialchars($e['cat_slug']??'') ?>" style="color:var(--amber)">
+      <a href="/index.html?cat=<?= htmlspecialchars($e['cat_slug']??'') ?>" style="color:var(--amber)">
         <?= htmlspecialchars($e['cat']??'Archive') ?>
       </a>
     </div>
@@ -161,7 +160,7 @@ $ogUrl   = 'http://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . '/lost-knowledge
       <?php if ($e['region']): ?><span class="meta-item">🌍 <?= htmlspecialchars($e['region']) ?></span><?php endif; ?>
       <?php if ($e['era']):    ?><span class="meta-item">⏳ <?= htmlspecialchars($e['era'])    ?></span><?php endif; ?>
       <span class="meta-item">✍️
-        <a href="/lost-knowledge/profile.php?username=<?= urlencode($e['username']??'') ?>"
+        <a href="/profile.php?username=<?= urlencode($e['username']??'') ?>"
            style="color:var(--amber-light);font-weight:500">
           <?= htmlspecialchars($e['username']??'Anonymous') ?>
         </a>
@@ -179,7 +178,7 @@ $ogUrl   = 'http://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . '/lost-knowledge
     <?php if (!empty($entryTags)): ?>
     <div class="tag-list" style="margin-bottom:1rem">
       <?php foreach ($entryTags as $tag): ?>
-      <a href="/lost-knowledge/index.html?tag=<?= htmlspecialchars($tag['slug']) ?>" class="tag-pill">#<?= htmlspecialchars($tag['name']) ?></a>
+      <a href="/index.html?tag=<?= htmlspecialchars($tag['slug']) ?>" class="tag-pill">#<?= htmlspecialchars($tag['name']) ?></a>
       <?php endforeach; ?>
     </div>
     <?php endif; ?>
@@ -221,7 +220,7 @@ $ogUrl   = 'http://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . '/lost-knowledge
         </div>
         <?php if (!is_logged_in()): ?>
         <p style="margin-top:.5rem;font-size:.78rem;color:var(--text-on-dark-faint);text-transform:none;letter-spacing:0">
-          <a href="/lost-knowledge/login.html" style="color:var(--amber-light)">Sign in</a> to vote.
+          <a href="/login.html" style="color:var(--amber-light)">Sign in</a> to vote.
         </p>
         <?php endif; ?>
       </div>
@@ -239,12 +238,12 @@ $ogUrl   = 'http://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . '/lost-knowledge
     <!-- Edit / Delete / Revisions (owner or admin) -->
     <?php if (is_logged_in() && (current_user_id()===(int)$e['user_id'] || is_admin())): ?>
     <div style="display:flex;gap:.65rem;margin-top:1.25rem;flex-wrap:wrap;align-items:center">
-      <a href="/lost-knowledge/edit_entry.php?id=<?=$id?>" class="btn btn-outline btn-sm">✏️ Edit entry</a>
+      <a href="/edit_entry.php?id=<?=$id?>" class="btn btn-outline btn-sm">✏️ Edit entry</a>
       <?php if ($revisionCount > 0): ?>
-      <a href="/lost-knowledge/revisions.php?id=<?=$id?>" class="btn btn-ghost btn-sm">📜 <?= $revisionCount ?> revision<?= $revisionCount !== 1 ? 's' : '' ?></a>
+      <a href="/revisions.php?id=<?=$id?>" class="btn btn-ghost btn-sm">📜 <?= $revisionCount ?> revision<?= $revisionCount !== 1 ? 's' : '' ?></a>
       <?php endif; ?>
       <?php if (is_admin()): ?>
-      <a href="/lost-knowledge/delete_entry.php?id=<?=$id?>" class="btn btn-danger btn-sm"
+      <a href="/delete_entry.php?id=<?=$id?>" class="btn btn-danger btn-sm"
          data-confirm="Delete this entry permanently?">Delete</a>
       <?php endif; ?>
     </div>
@@ -271,14 +270,14 @@ $ogUrl   = 'http://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . '/lost-knowledge
                 <?= strtoupper(substr($cm['username'],0,1)) ?>
               </div>
               <div>
-                <a href="/lost-knowledge/profile.php?username=<?= urlencode($cm['username']) ?>" style="font-weight:600;font-size:.88rem;color:var(--amber-light);text-decoration:none">
+                <a href="/profile.php?username=<?= urlencode($cm['username']) ?>" style="font-weight:600;font-size:.88rem;color:var(--amber-light);text-decoration:none">
                   <?= htmlspecialchars($cm['username']) ?>
                 </a>
                 <div style="font-size:.75rem;color:var(--text-on-dark-faint)"><?= date('d M Y, H:i', strtotime($cm['created_at'])) ?></div>
               </div>
             </div>
             <?php if (is_logged_in() && (current_user_id()===(int)$cm['uid'] || is_admin())): ?>
-            <form method="POST" action="/lost-knowledge/comment_process.php" style="display:inline">
+            <form method="POST" action="/comment_process.php" style="display:inline">
               <input type="hidden" name="action"     value="delete">
               <input type="hidden" name="entry_id"   value="<?=$id?>">
               <input type="hidden" name="comment_id" value="<?=$cm['id']?>">
@@ -299,7 +298,7 @@ $ogUrl   = 'http://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . '/lost-knowledge
           </div>
           <span style="font-size:.85rem;font-weight:600;color:var(--text-on-dark)"><?= current_username() ?></span>
         </div>
-        <form id="commentForm" method="POST" action="/lost-knowledge/comment_process.php">
+        <form id="commentForm" method="POST" action="/comment_process.php">
           <input type="hidden" name="action"   value="add">
           <input type="hidden" name="entry_id" value="<?=$id?>">
           <textarea name="body" id="cmBody" maxlength="1000"
@@ -316,7 +315,7 @@ $ogUrl   = 'http://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . '/lost-knowledge
       <?php else: ?>
       <div style="text-align:center;padding:1.25rem;background:var(--bg-panel);border:1px solid var(--border-dark);border-radius:var(--radius-lg);margin-top:1rem">
         <p style="font-size:.9rem;color:var(--text-on-dark-muted);margin:0">
-          <a href="/lost-knowledge/login.html" style="color:var(--amber-light)">Sign in</a> to join the discussion.
+          <a href="/login.html" style="color:var(--amber-light)">Sign in</a> to join the discussion.
         </p>
       </div>
       <?php endif; ?>
@@ -331,7 +330,7 @@ $ogUrl   = 'http://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . '/lost-knowledge
       <p style="font-size:.82rem;color:var(--text-on-dark-faint);margin-bottom:.85rem">Other entries worth preserving.</p>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:1rem;margin-top:1rem">
         <?php foreach ($related as $r): ?>
-        <div class="review-card" onclick="window.location='/lost-knowledge/entry.php?id=<?=$r['id']?>'" style="cursor:pointer">
+        <div class="review-card" onclick="window.location='/entry.php?id=<?=$r['id']?>'" style="cursor:pointer">
           <?php if ($r['image_path']): ?>
           <img src="<?= htmlspecialchars($r['image_path']) ?>" alt="" style="width:100%;height:100px;object-fit:cover;border-radius:var(--radius-md);margin-bottom:8px">
           <?php endif; ?>
@@ -344,7 +343,7 @@ $ogUrl   = 'http://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . '/lost-knowledge
     <?php endif; ?>
 
     <div style="margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid var(--border-dark)">
-      <a href="/lost-knowledge/index.html" class="btn btn-ghost" style="padding-left:0">← Back to archive</a>
+      <a href="/index.html" class="btn btn-ghost" style="padding-left:0">← Back to archive</a>
     </div>
 
   </div>
@@ -356,8 +355,8 @@ $ogUrl   = 'http://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . '/lost-knowledge
   </div>
 </footer>
 
-<script src="/lost-knowledge/assets/js/script.js"></script>
-<script src="/lost-knowledge/assets/js/features.js"></script>
+<script src="/assets/js/script.js"></script>
+<script src="/assets/js/features.js"></script>
 <script>
 // Character counter
 const cmBody = document.getElementById('cmBody');
@@ -371,7 +370,7 @@ if (cmBody && cmCount) {
 
 // Bookmark
 function toggleBookmark(id) {
-  fetch('/lost-knowledge/bookmark_process.php', {
+  fetch('/bookmark_process.php', {
     method:'POST',
     headers:{'Content-Type':'application/x-www-form-urlencoded','X-Requested-With':'XMLHttpRequest'},
     body:'entry_id='+id
@@ -407,13 +406,13 @@ function shareEntry() {
     const q = inp.value.trim();
     if (q.length < 2) { drop.style.display='none'; return; }
     t = setTimeout(() => {
-      fetch('/lost-knowledge/api/knowledge.php?search='+encodeURIComponent(q)+'&per_page=6&status=approved')
+      fetch('/api/knowledge.php?search='+encodeURIComponent(q)+'&per_page=6&status=approved')
         .then(r=>r.json()).then(d=>{
           if (!d.success || !d.data?.length) {
             drop.innerHTML='<div style="padding:.75rem 1rem;font-size:.85rem;color:var(--text-on-dark-faint);font-style:italic">No results found.</div>';
           } else {
             drop.innerHTML=d.data.map(e=>`
-              <div class="ac-item" onclick="location='/lost-knowledge/entry.php?id=${e.id}'" style="padding:.65rem 1rem;cursor:pointer;border-bottom:1px solid var(--border-dark);transition:background .15s">
+              <div class="ac-item" onclick="location='/entry.php?id=${e.id}'" style="padding:.65rem 1rem;cursor:pointer;border-bottom:1px solid var(--border-dark);transition:background .15s">
                 <div style="font-size:.88rem;font-weight:500;color:var(--text-on-dark)">${e.title.replace(/</g,'&lt;')}</div>
                 <div style="font-size:.72rem;color:var(--amber-light);margin-top:.12rem">${(e.category_name||'General').replace(/</g,'&lt;')}</div>
               </div>`).join('');
@@ -425,7 +424,7 @@ function shareEntry() {
   document.addEventListener('click', ev => { if (!inp.contains(ev.target)&&!drop.contains(ev.target)) drop.style.display='none'; });
   inp.addEventListener('keydown', ev => {
     if (ev.key==='Escape') drop.style.display='none';
-    if (ev.key==='Enter') { ev.preventDefault(); location='/lost-knowledge/index.html?search='+encodeURIComponent(inp.value.trim()); }
+    if (ev.key==='Enter') { ev.preventDefault(); location='/index.html?search='+encodeURIComponent(inp.value.trim()); }
   });
 })();
 </script>

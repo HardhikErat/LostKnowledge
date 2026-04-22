@@ -315,8 +315,8 @@ function initEntryList() {
     }
 
     grid.innerHTML = entries.map(e => `
-      <article class="entry-card" onclick="window.location.href='/entry.php?id=${e.id}'" role="button" tabindex="0">
-        ${e.image_path ? `<img src="${esc(e.image_path)}" alt="" class="ec-image">` : ''}
+      <article class="entry-card" onclick="window.location.href=(window.location.pathname.startsWith('/lost-knowledge') ? '/lost-knowledge' : '') + '/entry.php?id=${e.id}'" role="button" tabindex="0">
+        ${e.image_path ? `<img src="${esc(!window.location.pathname.startsWith('/lost-knowledge') && e.image_path.startsWith('/lost-knowledge') ? e.image_path.replace('/lost-knowledge', '') : e.image_path)}" alt="" class="ec-image">` : ''}
         <div class="ec-top">
           <span class="ec-cat">${esc(e.category_name || 'General')}</span>
         </div>
@@ -429,11 +429,13 @@ function loadStats() {
 
 /* ── Floating Chat FAB (injected on every page) ──── */
 function initChatFab() {
-  // Don't show on the chatbot page itself
-  if (window.location.pathname.includes('chatbot.html')) return;
+  // Don't show on the assistant page itself
+  if (window.location.pathname.includes('assistant.html')) return;
 
   const fab = document.createElement('a');
-  fab.href = '/chatbot.html';
+  // Use root if we are not inside /lost-knowledge
+  const basePath = window.location.pathname.startsWith('/lost-knowledge') ? '/lost-knowledge' : '';
+  fab.href = basePath + '/assistant.html';
   fab.className = 'chat-fab';
   fab.title = 'Need help? Chat with our bot';
   fab.setAttribute('aria-label', 'Open Help Bot');
@@ -441,7 +443,49 @@ function initChatFab() {
   document.body.appendChild(fab);
 }
 
-/* ── Dynamic Auth-Aware Nav (for static .html pages) ─ */
+/* ── Load recent entries for hero panel ───────────── */
+function loadHeroRecent() {
+  const panel = $('#heroRecentEntries');
+  if (!panel) return;
+
+  fetch('/api/knowledge.php?per_page=2&sort=newest&status=approved')
+    .then(r => r.json())
+    .then(data => {
+      if (!data.success || !data.data || !data.data.length) {
+        panel.innerHTML = '<div class="hero-panel-title">Recent Entries</div><div style="padding:1rem;color:var(--text-on-dark-faint)">No entries yet.</div>';
+        return;
+      }
+      
+      let html = '<div class="hero-panel-title">Recent Entries</div>';
+      
+      const featured = data.data.find(e => e.image_path) || data.data[0];
+      if (featured && featured.image_path) {
+        html += `<img src="${esc(featured.image_path)}" alt="${esc(featured.title)}" class="featured-img" onerror="this.style.display='none'">`;
+      }
+      
+      data.data.slice(0, 2).forEach(e => {
+        html += `
+        <div class="hero-mini-card" onclick="window.location='/entry.php?id=${e.id}'">
+          <div class="hmc-badge">${esc(e.category_name || 'General')}</div>
+          <div class="hmc-info">
+            <div class="hmc-title">${esc(e.title)}</div>
+            <div class="hmc-votes">
+              <span class="hmc-vote-up">↑ ${e.votes_up || 0}</span>
+              <span>✦</span>
+              <span>${esc(e.region || 'Unknown Region')}</span>
+            </div>
+          </div>
+        </div>`;
+      });
+      
+      panel.innerHTML = html;
+    })
+    .catch(() => {
+      panel.innerHTML = '<div class="hero-panel-title">Recent Entries</div><div style="padding:1rem;color:var(--text-on-dark-faint)">Failed to load.</div>';
+    });
+}
+
+/* ── Dynamic Auth-Aware Nav ─ */
 function initAuthNav() {
   fetch('/api/auth_check.php')
     .then(r => r.json())
@@ -449,39 +493,107 @@ function initAuthNav() {
       const nav = $('.nav-links');
       if (!nav) return;
 
-      if (data.logged_in) {
-        // Remove Register & Sign In links, add Dashboard & Sign Out
-        $$('.nav-link', nav).forEach(link => {
-          const href = link.getAttribute('href') || '';
-          if (href.includes('register.html') || href.includes('login.html')) {
-            link.remove();
-          }
-        });
-        // Remove nav-sep if present (no longer needed before auth links)
-        const sep = nav.querySelector('.nav-sep');
+      const cta = nav.querySelector('.nav-cta');
+      const insertBefore = cta || null;
 
-        // Only add Dashboard/Sign Out if not already present
+      if (data.logged_in) {
+        // Logged in: Remove Register & Sign In links
+        $$('.auth-link', nav).forEach(link => link.remove());
+
+        // Add Dashboard link
         if (!nav.querySelector('[href*="dashboard.php"]')) {
           const dashLink = document.createElement('a');
           dashLink.href = '/dashboard.php';
           dashLink.className = 'nav-link';
           dashLink.textContent = 'Dashboard';
-          if (sep) sep.after(dashLink);
-          else nav.appendChild(dashLink);
+          nav.insertBefore(dashLink, insertBefore);
         }
+        
+        // Add Admin link for admins
+        if (data.is_admin && !nav.querySelector('[href*="admin_dashboard.php"]')) {
+          const adminLink = document.createElement('a');
+          adminLink.href = '/admin/admin_dashboard.php';
+          adminLink.className = 'nav-link';
+          adminLink.textContent = 'Admin';
+          nav.insertBefore(adminLink, insertBefore);
+        }
+
+        // Add Sign Out link
         if (!nav.querySelector('[href*="logout.php"]')) {
           const outLink = document.createElement('a');
           outLink.href = '/logout.php';
           outLink.className = 'nav-link';
           outLink.textContent = 'Sign Out';
-          // Insert before the Submit Entry CTA if it exists
-          const cta = nav.querySelector('.nav-cta');
-          if (cta) nav.insertBefore(outLink, cta);
-          else nav.appendChild(outLink);
+          nav.insertBefore(outLink, insertBefore);
         }
+      } else {
+        // Logged out: clean up Dashboard, Admin, Sign Out if present
+        $$('.nav-link', nav).forEach(link => {
+          const href = link.getAttribute('href') || '';
+          if (href.includes('dashboard.php') || href.includes('logout.php') || href.includes('admin_dashboard.php')) {
+            link.remove();
+          }
+        });
       }
+      
+      // Update active state based on current path
+      const currentPath = window.location.pathname.split('/').pop() || 'index.html';
+      $$('.nav-link', nav).forEach(link => {
+        const href = link.getAttribute('href') || '';
+        if (href.endsWith(currentPath)) {
+          link.classList.add('active');
+        } else {
+          link.classList.remove('active');
+        }
+      });
     })
-    .catch(() => {}); // silently fail for pages that don't need it
+    .catch(() => {});
+}
+
+/* ── Dynamic Hero Recent Entries ───────────────────── */
+function loadHeroRecentEntries() {
+  const panel = $('#heroRecentEntries');
+  if (!panel) return;
+  
+  fetch('/api/knowledge.php?page=1&per_page=2&sort=newest&status=approved')
+    .then(r => r.json())
+    .then(data => {
+      if (!data.success || !data.data || !data.data.length) {
+        panel.innerHTML = '<div class="hero-panel-title">Recent Entries</div><p style="padding:1rem">No entries found.</p>';
+        return;
+      }
+      
+      const entries = data.data;
+      const featuredImage = entries.find(e => e.image_path)?.image_path || '';
+      
+      let html = '<div class="hero-panel-title">Recent Entries</div>';
+      
+      if (featuredImage) {
+        html += `<img src="${esc(!window.location.pathname.startsWith('/lost-knowledge') && featuredImage.startsWith('/lost-knowledge') ? featuredImage.replace('/lost-knowledge', '') : featuredImage)}" class="featured-img" onerror="this.style.display='none'">`;
+      }
+      
+      entries.slice(0, 2).forEach(e => {
+        const basePath = window.location.pathname.startsWith('/lost-knowledge') ? '/lost-knowledge' : '';
+        html += `
+        <div class="hero-mini-card" onclick="window.location='${basePath}/entry.php?id=${e.id}'">
+          <div class="hmc-badge">${esc(e.category_name || 'General')}</div>
+          <div class="hmc-info">
+            <div class="hmc-title">${esc(e.title)}</div>
+            <div class="hmc-votes">
+              <span class="hmc-vote-up">↑ ${e.votes_up || 0}</span>
+              <span>✦</span>
+              <span>${esc(e.username || 'Anonymous')} ${e.region ? '· ' + esc(e.region) : ''}</span>
+            </div>
+          </div>
+        </div>`;
+      });
+      
+      panel.innerHTML = html;
+      initReveal();
+    })
+    .catch(() => {
+      panel.innerHTML = '<div class="hero-panel-title">Recent Entries</div><p style="padding:1rem">Failed to load.</p>';
+    });
 }
 
 /* ── Init ─────────────────────────────────────────── */
@@ -498,4 +610,5 @@ document.addEventListener('DOMContentLoaded', () => {
   loadStats();
   initChatFab();
   initAuthNav();
+  loadHeroRecentEntries();
 });

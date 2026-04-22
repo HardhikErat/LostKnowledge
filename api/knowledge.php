@@ -247,11 +247,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
         // Sort order
         $orderBy = match($sort) {
-            'oldest'        => 'ke.created_at ASC',
-            'most_votes'    => '(SELECT COUNT(*) FROM votes v3 WHERE v3.entry_id = ke.id AND v3.vote_type = "up") DESC, ke.created_at DESC',
-            'most_comments' => '(SELECT COUNT(*) FROM comments cm2 WHERE cm2.entry_id = ke.id) DESC, ke.created_at DESC',
-            'most_views'    => 'ke.views DESC, ke.created_at DESC',
-            default         => 'ke.created_at DESC',
+            'oldest'        => 'ke.created_at ASC, ke.id ASC',
+            'most_votes'    => '(SELECT COUNT(*) FROM votes v3 WHERE v3.entry_id = ke.id AND v3.vote_type = "up") DESC, ke.created_at DESC, ke.id DESC',
+            'most_comments' => '(SELECT COUNT(*) FROM comments cm2 WHERE cm2.entry_id = ke.id) DESC, ke.created_at DESC, ke.id DESC',
+            'most_views'    => 'ke.views DESC, ke.created_at DESC, ke.id DESC',
+            default         => 'ke.created_at DESC, ke.id DESC',
         };
 
         $dataStmt = $pdo->prepare(

@@ -43,7 +43,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
       $fname = 'entry_' . time() . '_' . uniqid() . '.' . $ext;
       if (move_uploaded_file($_FILES['image']['tmp_name'], "$dir/$fname")) {
-        $imagePath = "/lost-knowledge/uploads/entries/$fname";
+        // Automatically determine base path
+        $baseRoot = str_replace('/submit.php', '', $_SERVER['SCRIPT_NAME']);
+        $imagePath = "$baseRoot/uploads/entries/$fname";
       }
     }
   }
@@ -64,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       award_karma($userId, 10);
 
       $_SESSION['flash_success'] = 'Your entry has been submitted and is awaiting review. (+10 karma)';
-      header('Location: /lost-knowledge/dashboard.php'); exit;
+      header('Location: /dashboard.php'); exit;
     } catch (Exception $e) {
       $errors[] = 'Database error. Please try again.';
     }
@@ -77,26 +79,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Submit Entry — Lost Knowledge</title>
-  <link rel="stylesheet" href="/lost-knowledge/assets/css/style.css">
-  <link rel="stylesheet" href="/lost-knowledge/assets/css/features.css">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="stylesheet" href="/assets/css/features.css">
 </head>
 <body>
 
 <header class="site-header">
   <div class="container nav-inner">
-    <a href="/lost-knowledge/index.html" class="site-logo">
-      <img src="/lost-knowledge/assets/logo.png" alt="Lost Knowledge" class="nav-logo-img">
+    <a href="/index.html" class="site-logo">
+      <img src="/assets/logo.png" alt="Lost Knowledge" class="nav-logo-img">
       <div class="logo-text">
         <span class="logo-mark">Lost Knowledge</span>
         <span class="logo-sub">Archive of Vanishing Wisdom</span>
       </div>
     </a>
-    <button class="nav-toggle" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
-    <nav class="nav-links">
-      <a href="/lost-knowledge/index.html"    class="nav-link">Archive</a>
-      <a href="/lost-knowledge/dashboard.php" class="nav-link">Dashboard</a>
-      <a href="/lost-knowledge/submit.php"    class="nav-link active nav-cta">+ Submit</a>
-      <a href="/lost-knowledge/logout.php"    class="nav-link">Sign Out</a>
+    <button class="nav-toggle" aria-label="Menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+        <nav class="nav-links" aria-label="Main navigation">
+      <a href="/index.html" class="nav-link">Archive</a>
+      <a href="/explore_map.html" class="nav-link">🗺️ Map</a>
+      <a href="/about.php" class="nav-link">About</a>
+      <div class="nav-sep"></div>
+      <a href="/register.html" class="nav-link auth-link">Register</a>
+      <a href="/login.html" class="nav-link auth-link">Sign In</a>
+      <a href="/submit.php" class="nav-link nav-cta">✦ Submit Entry</a>
     </nav>
   </div>
 </header>
@@ -122,7 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <p>Be as detailed as possible — precision preserves truth.</p>
       </div>
 
-      <form id="knowledgeForm" method="POST" action="/lost-knowledge/submit.php" enctype="multipart/form-data" novalidate>
+      <form id="knowledgeForm" method="POST" action="/submit.php" enctype="multipart/form-data" novalidate>
 
         <div class="form-group">
           <label for="title">Title <span class="req">*</span></label>
@@ -197,7 +204,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <hr class="form-divider">
 
         <div style="display:flex;gap:.75rem;justify-content:flex-end;flex-wrap:wrap">
-          <a href="/lost-knowledge/dashboard.php" class="btn btn-ghost">Cancel</a>
+          <a href="/dashboard.php" class="btn btn-ghost">Cancel</a>
           <button type="submit" class="btn btn-amber">✦ Submit for review →</button>
         </div>
 
@@ -212,7 +219,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   </div>
 </footer>
 
-<script src="/lost-knowledge/assets/js/script.js"></script>
-<script src="/lost-knowledge/assets/js/features.js"></script>
+<script src="/assets/js/script.js"></script>
+<script src="/assets/js/features.js"></script>
 </body>
 </html>

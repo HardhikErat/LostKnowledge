@@ -1,4 +1,53 @@
-<?php if (session_status() === PHP_SESSION_NONE) session_start(); ?>
+<?php
+if (session_status() === PHP_SESSION_NONE) session_start();
+require_once __DIR__ . '/config/db.php';
+
+try {
+    $pdo = get_pdo();
+    $stmt = $pdo->query("
+        SELECT 
+            c.name AS category_name,
+            SUM(CASE WHEN e.status = 'approved' THEN 1 ELSE 0 END) AS approved_count,
+            SUM(CASE WHEN e.status = 'pending' THEN 1 ELSE 0 END) AS pending_count,
+            COUNT(e.id) AS total_count,
+            (
+                SELECT region 
+                FROM knowledge_entries e2 
+                WHERE e2.category_id = c.id AND e2.region IS NOT NULL AND trim(e2.region) != ''
+                GROUP BY region 
+                ORDER BY COUNT(*) DESC 
+                LIMIT 1
+            ) AS top_region,
+            ROUND(IFNULL(
+                (SELECT SUM(CASE WHEN v.vote_type = 'up' THEN 1 ELSE -1 END) 
+                 FROM votes v JOIN knowledge_entries e3 ON v.entry_id = e3.id 
+                 WHERE e3.category_id = c.id) 
+                / NULLIF(COUNT(e.id), 0)
+            , 0)) AS avg_votes
+        FROM categories c
+        LEFT JOIN knowledge_entries e ON c.id = e.category_id
+        GROUP BY c.id, c.name
+        ORDER BY c.id ASC
+    ");
+    $stats = $stmt->fetchAll();
+
+    $total_approved = 0;
+    $total_pending = 0;
+    $total_all = 0;
+    foreach ($stats as $row) {
+        $total_approved += (int)$row['approved_count'];
+        $total_pending += (int)$row['pending_count'];
+        $total_all += (int)$row['total_count'];
+    }
+    $total_traditions = count($stats);
+} catch (Exception $e) {
+    $stats = [];
+    $total_approved = 0;
+    $total_pending = 0;
+    $total_all = 0;
+    $total_traditions = 0;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,8 +57,8 @@
   <meta name="keywords" content="lost knowledge, archive, forgotten traditions, ancient wisdom">
   <meta name="author" content="Lost Knowledge Archive">
   <title>About — Lost Knowledge</title>
-  <link rel="stylesheet" href="/lost-knowledge/assets/css/style.css">
-  <link rel="stylesheet" href="/lost-knowledge/assets/css/features.css">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="stylesheet" href="/assets/css/features.css">
   <style>
     /* ── About-page specific styles ── */
 
@@ -292,8 +341,8 @@
 <!-- ═══ HEADER ════════════════════════════════════════════ -->
 <header class="site-header">
   <div class="container nav-inner">
-    <a href="/lost-knowledge/index.html" class="site-logo">
-      <img src="/lost-knowledge/assets/logo.png" alt="Lost Knowledge" class="nav-logo-img">
+    <a href="/index.html" class="site-logo">
+      <img src="/assets/logo.png" alt="Lost Knowledge" class="nav-logo-img">
       <div class="logo-text">
         <span class="logo-mark">Lost Knowledge</span>
         <span class="logo-sub">Archive of Vanishing Wisdom</span>
@@ -302,13 +351,14 @@
     <button class="nav-toggle" aria-label="Menu" aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
-    <nav class="nav-links" aria-label="Main navigation">
-      <a href="/lost-knowledge/index.html"    class="nav-link">Archive</a>
-      <a href="/lost-knowledge/about.php"    class="nav-link active">About</a>
+        <nav class="nav-links" aria-label="Main navigation">
+      <a href="/index.html" class="nav-link">Archive</a>
+      <a href="/explore_map.html" class="nav-link">🗺️ Map</a>
+      <a href="/about.php" class="nav-link">About</a>
       <div class="nav-sep"></div>
-      <a href="/lost-knowledge/register.html" class="nav-link">Register</a>
-      <a href="/lost-knowledge/login.html"    class="nav-link">Sign In</a>
-      <a href="/lost-knowledge/submit.php"    class="nav-link nav-cta">✦ Submit Entry</a>
+      <a href="/register.html" class="nav-link auth-link">Register</a>
+      <a href="/login.html" class="nav-link auth-link">Sign In</a>
+      <a href="/submit.php" class="nav-link nav-cta">✦ Submit Entry</a>
     </nav>
   </div>
 </header>
@@ -383,154 +433,6 @@
   </div>
 </section>
 
-<!-- ═══ SECTION 2 — IMAGE MAP / EXPLORE BY REGION ═════════ -->
-<section class="about-section about-section-alt">
-  <div class="container">
-    <div class="section-heading" style="text-align:center;margin-bottom:40px">
-      <h2>Explore by Region</h2>
-      <p>Click on a region of the world map below to filter entries from that area.</p>
-      <div class="gold-line"><span>✦</span></div>
-    </div>
-
-    <!--
-      Module 1.2: <img> + <map> + <area> — Image Map
-      coords are calibrated for the rendered display width of the Wikipedia
-      SVG map (1200px natural size). Each area maps to the visual continent
-      position on that specific projection.
-
-      Projection: Natural Earth / Robinson-style (Wikipedia low-res world map)
-      Natural size: 1200 × 600 px
-      Coordinate system: pixels from top-left of the image at natural size.
-
-      Region bounding boxes (tested against the actual image):
-        North America  : x1=30,  y1=30,  x2=290, y2=340
-        South America  : x1=180, y1=330, x2=340, y2=560
-        Europe         : x1=470, y1=30,  x2=620, y2=240
-        Africa         : x1=460, y1=230, x2=650, y2=530
-        Middle East    : x1=620, y1=180, x2=730, y2=320
-        Central Asia   : x1=620, y1=30,  x2=820, y2=200
-        East Asia      : x1=810, y1=40,  x2=1010,y2=300
-        South Asia     : x1=720, y1=260, x2=870, y2=410
-        Southeast Asia : x1=860, y1=290, x2=1010,y2=450
-        Oceania        : x1=900, y1=410, x2=1180,y2=580
-        Russia/N.Asia  : x1=610, y1=30,  x2=1010,y2=140 (overlaps, handled last)
-    -->
-
-    <!-- Tooltip label shown on hover -->
-    <div id="mapTooltip" style="
-      display:none;
-      position:fixed;
-      background:var(--bg-void);
-      border:1px solid var(--border-gold);
-      color:var(--amber-light);
-      font-family:var(--font-display);
-      font-size:.85rem;
-      font-weight:600;
-      padding:6px 14px;
-      border-radius:4px;
-      pointer-events:none;
-      z-index:9999;
-      letter-spacing:.04em;
-      white-space:nowrap;
-    "></div>
-
-    <div class="map-wrap" style="position:relative;line-height:0">
-      <img
-        id="worldMapImg"
-        src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/World_map_-_low_resolution.svg/1200px-World_map_-_low_resolution.svg.png"
-        alt="World map — click a region to explore knowledge entries from that area"
-        width="1200"
-        height="600"
-        usemap="#worldmap"
-        style="cursor:crosshair;max-width:100%;height:auto;display:block"
-        onerror="this.onerror=null;this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/World_map_blank_without_borders.svg/1200px-World_map_blank_without_borders.svg.png'">
-
-      <!--
-        All coords below are for the 1200×600 natural image size.
-        The browser automatically scales them proportionally when the
-        image is displayed at a different CSS width.
-        Shapes use polygon where possible for better fit.
-      -->
-      <map name="worldmap" id="worldmap">
-
-        <!-- North America: covers Canada, USA, Mexico, Caribbean -->
-        <area shape="poly"
-          coords="30,40, 290,40, 290,160, 260,180, 250,240, 230,260, 210,310, 185,335, 150,340, 100,300, 60,260, 30,200, 30,40"
-          href="#" alt="North America" title="North America"
-          onclick="filterRegion('North America');return false;">
-
-        <!-- South America -->
-        <area shape="poly"
-          coords="185,335, 215,330, 260,340, 290,360, 310,400, 320,450, 310,510, 290,555, 255,560, 225,530, 195,490, 175,440, 170,390, 175,355, 185,335"
-          href="#" alt="South America" title="South America"
-          onclick="filterRegion('South America');return false;">
-
-        <!-- Europe: UK, Scandinavia, France, Germany, Italy, Iberia etc. -->
-        <area shape="poly"
-          coords="460,40, 620,40, 625,80, 610,120, 590,160, 565,200, 540,230, 510,235, 480,220, 460,180, 455,130, 460,40"
-          href="#" alt="Europe" title="Europe"
-          onclick="filterRegion('Europe');return false;">
-
-        <!-- Africa -->
-        <area shape="poly"
-          coords="460,235, 510,235, 545,230, 580,240, 615,235, 640,260, 650,320, 645,400, 620,460, 600,520, 570,545, 540,540, 510,510, 490,460, 470,400, 455,340, 455,280, 460,235"
-          href="#" alt="Africa" title="Africa"
-          onclick="filterRegion('Africa');return false;">
-
-        <!-- Middle East: Arabian Peninsula, Iran, Iraq, Turkey -->
-        <area shape="poly"
-          coords="615,170, 730,170, 740,210, 740,280, 720,320, 690,330, 655,320, 630,280, 615,240, 610,200, 615,170"
-          href="#" alt="Middle East" title="Middle East"
-          onclick="filterRegion('Middle East');return false;">
-
-        <!-- Russia / North Asia (broad band across top) -->
-        <area shape="poly"
-          coords="615,40, 1010,40, 1010,140, 820,145, 730,165, 620,160, 615,40"
-          href="#" alt="Russia / North Asia" title="Russia / North Asia"
-          onclick="filterRegion('Russia / North Asia');return false;">
-
-        <!-- East Asia: China, Japan, Korea, Mongolia -->
-        <area shape="poly"
-          coords="820,145, 1010,145, 1010,310, 960,330, 900,300, 860,270, 840,230, 820,180, 820,145"
-          href="#" alt="East Asia" title="East Asia"
-          onclick="filterRegion('East Asia');return false;">
-
-        <!-- South Asia: India, Pakistan, Bangladesh, Sri Lanka -->
-        <area shape="poly"
-          coords="730,165, 820,175, 820,280, 800,340, 775,380, 755,410, 725,400, 710,360, 700,310, 700,240, 715,200, 730,165"
-          href="#" alt="South Asia" title="South Asia"
-          onclick="filterRegion('South Asia');return false;">
-
-        <!-- Southeast Asia: Thailand, Vietnam, Indonesia, Philippines -->
-        <area shape="poly"
-          coords="860,270, 960,280, 1005,310, 1010,400, 980,450, 940,460, 900,430, 870,390, 855,330, 850,290, 860,270"
-          href="#" alt="South East Asia" title="South East Asia"
-          onclick="filterRegion('South East Asia');return false;">
-
-        <!-- Oceania: Australia, New Zealand, Pacific Islands -->
-        <area shape="poly"
-          coords="920,415, 1010,405, 1090,415, 1170,435, 1180,490, 1140,545, 1080,560, 1010,545, 960,510, 920,470, 910,440, 920,415"
-          href="#" alt="Oceania / Pacific" title="Oceania / Pacific"
-          onclick="filterRegion('Oceania / Pacific');return false;">
-
-      </map>
-    </div>
-
-    <p class="map-hint">✦ Hover over a region to see its name. Click to filter archive entries.</p>
-
-    <div class="map-region-result" id="regionResult" style="display:none">
-      <strong>✦ Region selected:</strong> <span id="regionName"></span> —
-      <a href="/lost-knowledge/index.html" style="color:var(--amber-light)" id="regionLink">Browse matching entries →</a>
-    </div>
-
-    <!-- Interactive Leaflet Map -->
-    <div style="margin-top:40px">
-      <h3 style="text-align:center;margin-bottom:16px;font-family:var(--font-display);color:var(--text-on-dark)">Interactive Map — Geolocated Entries</h3>
-      <p style="text-align:center;font-size:14px;color:var(--text-on-dark-faint);margin-bottom:20px">Click markers to view entry details and navigate to the full article.</p>
-      <div class="map-container" id="leafletMap" style="height:450px;border-radius:12px"></div>
-    </div>
-  </div>
-</section>
 
 <!-- ═══ SECTION 3 — ARCHIVE STATISTICS TABLE ══════════════ -->
 <section class="about-section">
@@ -564,21 +466,29 @@
           </tr>
         </thead>
         <tbody>
-          <tr><td><strong style="color:var(--text-on-dark)">Ancient Crafts</strong></td>      <td>24</td><td>3</td><td>27</td><td>Asia</td><td>42</td></tr>
-          <tr><td><strong style="color:var(--text-on-dark)">Oral Traditions</strong></td>     <td>31</td><td>5</td><td>36</td><td>Africa</td><td>58</td></tr>
-          <tr><td><strong style="color:var(--text-on-dark)">Herbal Medicine</strong></td>     <td>18</td><td>2</td><td>20</td><td>Mediterranean</td><td>35</td></tr>
-          <tr><td><strong style="color:var(--text-on-dark)">Agricultural Lore</strong></td>   <td>15</td><td>4</td><td>19</td><td>South Asia</td><td>29</td></tr>
-          <tr><td><strong style="color:var(--text-on-dark)">Architecture</strong></td>        <td>12</td><td>1</td><td>13</td><td>Middle East</td><td>44</td></tr>
-          <tr><td><strong style="color:var(--text-on-dark)">Navigation</strong></td>          <td>9</td> <td>2</td><td>11</td><td>Pacific</td><td>71</td></tr>
-          <tr><td><strong style="color:var(--text-on-dark)">Language &amp; Scripts</strong></td><td>28</td><td>6</td><td>34</td><td>South America</td><td>63</td></tr>
-          <tr><td><strong style="color:var(--text-on-dark)">Ritual &amp; Ceremony</strong></td><td>22</td><td>5</td><td>27</td><td>Central America</td><td>51</td></tr>
+          <?php if (!empty($stats)): ?>
+            <?php foreach ($stats as $row): ?>
+            <tr>
+              <td><strong style="color:var(--text-on-dark)"><?php echo htmlspecialchars($row['category_name']); ?></strong></td>
+              <td><?php echo (int)$row['approved_count']; ?></td>
+              <td><?php echo (int)$row['pending_count']; ?></td>
+              <td><?php echo (int)$row['total_count']; ?></td>
+              <td><?php echo $row['top_region'] ? htmlspecialchars($row['top_region']) : '—'; ?></td>
+              <td><?php echo (int)$row['avg_votes']; ?></td>
+            </tr>
+            <?php endforeach; ?>
+          <?php else: ?>
+            <tr>
+              <td colspan="6" style="text-align:center">No archive statistics available.</td>
+            </tr>
+          <?php endif; ?>
         </tbody>
         <tfoot>
           <tr>
             <td><strong>TOTAL</strong></td>
-            <td><strong>159</strong></td>
-            <td><strong>28</strong></td>
-            <td colspan="3" style="text-align:center"><strong>187 entries across 8 traditions</strong></td>
+            <td><strong><?php echo $total_approved; ?></strong></td>
+            <td><strong><?php echo $total_pending; ?></strong></td>
+            <td colspan="3" style="text-align:center"><strong><?php echo $total_all; ?> entries across <?php echo $total_traditions; ?> tradition<?php echo $total_traditions === 1 ? '' : 's'; ?></strong></td>
           </tr>
         </tfoot>
       </table>
@@ -788,7 +698,7 @@
 
       <div class="contact-card">
         <!-- Module 1.2: All form input types — submits to PHP backend -->
-        <form id="contactForm" method="POST" action="/lost-knowledge/feedback_process.php" novalidate>
+        <form id="contactForm" method="POST" action="/feedback_process.php" novalidate>
 
           <fieldset style="border:1px solid var(--border-dark);border-radius:6px;padding:20px;margin-bottom:20px">
             <legend style="font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);padding:0 8px">Personal Information</legend>
@@ -943,26 +853,26 @@
       <div class="footer-col">
         <h4>Archive</h4>
         <ul>
-          <li><a href="/lost-knowledge/index.html">Browse Entries</a></li>
-          <li><a href="/lost-knowledge/submit.php">Submit Entry</a></li>
-          <li><a href="/lost-knowledge/index.html#archive">Categories</a></li>
+          <li><a href="/index.html">Browse Entries</a></li>
+          <li><a href="/submit.php">Submit Entry</a></li>
+          <li><a href="/index.html#archive">Categories</a></li>
         </ul>
       </div>
       <div class="footer-col">
         <h4>Community</h4>
         <ul>
-          <li><a href="/lost-knowledge/about.php">About Us</a></li>
-          <li><a href="/lost-knowledge/register.html">Become a Keeper</a></li>
-          <li><a href="/lost-knowledge/guidelines.html">Guidelines</a></li>
+          <li><a href="/about.php">About Us</a></li>
+          <li><a href="/register.html">Become a Keeper</a></li>
+          <li><a href="/guidelines.html">Guidelines</a></li>
         </ul>
       </div>
       <div class="footer-col">
         <h4>Support</h4>
         <ul>
-          <li><a href="/lost-knowledge/help.html">Help Center</a></li>
-          <li><a href="/lost-knowledge/privacy.html">Privacy Policy</a></li>
-          <li><a href="/lost-knowledge/terms.html">Terms of Service</a></li>
-          <li><a href="/lost-knowledge/admin/admin_dashboard.php" class="admin-link">Admin Dashboard</a></li>
+          <li><a href="/help.html">Help Center</a></li>
+          <li><a href="/privacy.html">Privacy Policy</a></li>
+          <li><a href="/terms.html">Terms of Service</a></li>
+          <li><a href="/admin/admin_dashboard.php" class="admin-link">Admin Dashboard</a></li>
         </ul>
       </div>
     </div>
@@ -974,7 +884,7 @@
   </div>
 </footer>
 
-<script src="/lost-knowledge/assets/js/script.js"></script>
+<script src="/assets/js/script.js"></script>
 <script>
   function filterRegion(region) {
     const result = document.getElementById('regionResult');
@@ -985,7 +895,7 @@
       result.style.display = 'flex';
       result.scrollIntoView({ behavior:'smooth', block:'nearest' });
     }
-    if (link) link.href = '/lost-knowledge/index.html?search=' + encodeURIComponent(region);
+    if (link) link.href = '/index.html?search=' + encodeURIComponent(region);
   }
 
   // Floating tooltip that follows mouse over image map areas
@@ -1027,6 +937,6 @@
     window.addEventListener('resize', scaleMap);
   })();
 </script>
-<script src="/lost-knowledge/assets/js/features.js"></script>
+<script src="/assets/js/features.js"></script>
 </body>
 </html>

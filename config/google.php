@@ -7,7 +7,7 @@
 // ⚠️ REPLACE THESE with your actual Google OAuth credentials
 define('GOOGLE_CLIENT_ID', '657183368925-8pp3qdau71di7rv8pk6r2dv5ch14cqlb.apps.googleusercontent.com');
 define('GOOGLE_CLIENT_SECRET', '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');
-define('GOOGLE_REDIRECT_URI', 'http://localhost/google_callback.php');
+define('GOOGLE_REDIRECT_URI', 'https://lostknowledge.in/google_callback.php');
 
 /**
  * Build the Google OAuth 2.0 authorization URL.

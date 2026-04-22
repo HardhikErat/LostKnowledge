@@ -8,7 +8,7 @@ require_once __DIR__ . '/config/notify.php';
 
 if (!is_logged_in()) {
     $_SESSION['flash_error'] = 'You must be logged in to comment.';
-    header('Location: /lost-knowledge/login.html');
+    header('Location: /login.html');
     exit;
 }
 
@@ -16,7 +16,7 @@ $userId  = current_user_id();
 $action  = $_POST['action']  ?? '';
 $entryId = (int)($_POST['entry_id'] ?? 0);
 
-if ($entryId <= 0) { header('Location: /lost-knowledge/index.html'); exit; }
+if ($entryId <= 0) { header('Location: /index.html'); exit; }
 
 $pdo = get_pdo();
 
@@ -26,7 +26,7 @@ if ($action === 'add' && $_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!$body || strlen($body) < 2 || strlen($body) > 1000) {
         $_SESSION['flash_error'] = 'Comment must be 2–1000 characters.';
-        header("Location: /lost-knowledge/entry.php?id=$entryId#comments");
+        header("Location: /entry.php?id=$entryId#comments");
         exit;
     }
 
@@ -48,7 +48,7 @@ if ($action === 'add' && $_SERVER['REQUEST_METHOD'] === 'POST') {
                 (int)$entry['user_id'],
                 'new_comment',
                 "{$commenter} commented on your entry \"{$entry['title']}\"",
-                "/lost-knowledge/entry.php?id={$entryId}#comments"
+                "/entry.php?id={$entryId}#comments"
             );
         }
 
@@ -57,7 +57,7 @@ if ($action === 'add' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['flash_error'] = 'Failed to post comment.';
     }
 
-    header("Location: /lost-knowledge/entry.php?id=$entryId#comments");
+    header("Location: /entry.php?id=$entryId#comments");
     exit;
 }
 
@@ -67,7 +67,7 @@ if ($action === 'delete' && $_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($commentId <= 0) {
         $_SESSION['flash_error'] = 'Invalid comment.';
-        header("Location: /lost-knowledge/entry.php?id=$entryId#comments");
+        header("Location: /entry.php?id=$entryId#comments");
         exit;
     }
 
@@ -89,10 +89,10 @@ if ($action === 'delete' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['flash_error'] = 'Failed to delete comment.';
     }
 
-    header("Location: /lost-knowledge/entry.php?id=$entryId#comments");
+    header("Location: /entry.php?id=$entryId#comments");
     exit;
 }
 
 // Fallback
-header("Location: /lost-knowledge/entry.php?id=$entryId");
+header("Location: /entry.php?id=$entryId");
 exit;

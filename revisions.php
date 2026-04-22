@@ -56,11 +56,17 @@ try {
         <span class="logo-sub">Archive of Vanishing Wisdom</span>
       </div>
     </a>
-    <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
-    <nav class="nav-links">
-      <a href="/entry.php?id=<?= $entryId ?>" class="nav-link">← Back to Entry</a>
-      <a href="/dashboard.php" class="nav-link">Dashboard</a>
-      <a href="/logout.php" class="nav-link">Sign Out</a>
+    <button class="nav-toggle" aria-label="Menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+        <nav class="nav-links" aria-label="Main navigation">
+      <a href="/index.html" class="nav-link">Archive</a>
+      <a href="/explore_map.html" class="nav-link">🗺️ Map</a>
+      <a href="/about.php" class="nav-link">About</a>
+      <div class="nav-sep"></div>
+      <a href="/register.html" class="nav-link auth-link">Register</a>
+      <a href="/login.html" class="nav-link auth-link">Sign In</a>
+      <a href="/submit.php" class="nav-link nav-cta">✦ Submit Entry</a>
     </nav>
   </div>
 </header>

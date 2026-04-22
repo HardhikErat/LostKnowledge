@@ -9,7 +9,7 @@ require_once __DIR__ . '/config/db.php';
 
 // POST only
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: /lost-knowledge/about.php');
+    header('Location: /about.php');
     exit;
 }
 
@@ -58,7 +58,7 @@ if ($bugDate && !preg_match('/^\d{4}-\d{2}-\d{2}$/', $bugDate)) {
 
 if (!empty($errors)) {
     $msg = urlencode(implode(' | ', $errors));
-    header("Location: /lost-knowledge/about.php?feedback_error={$msg}#contact");
+    header("Location: /about.php?feedback_error={$msg}#contact");
     exit;
 }
 
@@ -87,12 +87,12 @@ try {
 
     // Flash success via session
     $_SESSION['feedback_success'] = 'Thank you, ' . htmlspecialchars($name) . '! Your feedback has been received.';
-    header('Location: /lost-knowledge/about.php?feedback=1#contact');
+    header('Location: /about.php?feedback=1#contact');
     exit;
 
 } catch (Exception $e) {
     error_log('[LK] Feedback error: ' . $e->getMessage());
     $msg = urlencode('A database error occurred. Please try again.');
-    header("Location: /lost-knowledge/about.php?feedback_error={$msg}#contact");
+    header("Location: /about.php?feedback_error={$msg}#contact");
     exit;
 }
